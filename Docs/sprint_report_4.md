@@ -29,7 +29,7 @@ Here are links to issues we worked on but did not complete in this sprint:
 ## Code Files for Review
 Please review the following code files, which were actively developed during this
 sprint, for quality:
-* [Checkout/Page.tsx]([https://github.com/your_repo/file_extension)](https://github.com/Kronera/CptS421AWWGr23/tree/Paypal-integration/code/apps/web/app/checkout)
+* [Checkout/Page.tsx](https://github.com/Kronera/CptS421AWWGr23/tree/Paypal-integration/code/apps/web/app/checkout)
 * [Name of code file 2](https://github.com/your_repo/file_extension)
 * [Name of code file 3](https://github.com/your_repo/file_extension)
 ## Retrospective Summary
@@ -37,11 +37,11 @@ Here's what went well:
 * Completed most functional goals
 * Client is satisfied with the outcomes
 * We are on pace to finish this project for client
-Here's what we'd like to improve:
+*Here's what we'd like to improve:
 * Design of pages to satisfy client
 * Finish AI integration for site navigation
 * Finish services page to help clients manage website
-Here are changes we plan to implement in the next sprint:
+* Here are changes we plan to implement in the next sprint:
 * AI Integration
 * Service page
 * Client website testing
