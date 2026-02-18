@@ -30,7 +30,7 @@ Here are links to issues we worked on but did not complete in this sprint:
 Please review the following code files, which were actively developed during this
 sprint, for quality:
 * [Checkout/Page.tsx](https://github.com/Kronera/CptS421AWWGr23/tree/Paypal-integration/code/apps/web/app/checkout)
-* [Name of code file 2](https://github.com/your_repo/file_extension)
+* [Contact & Partnerships]([https://github.com/your_repo/file_extension](https://github.com/Kronera/CptS421AWWGr23/tree/contact/partnerships))
 * [Name of code file 3](https://github.com/your_repo/file_extension)
 ## Retrospective Summary
 Here's what went well:
