@@ -33,14 +33,14 @@ export default function ContactPage() {
     {
       icon: <Mail size={24} />,
       title: 'Email Us',
-      content: 'info@awomansWorth.org',
+      content: 'ghallman@aww.community',
       description: 'Send us an email anytime'
     },
     {
       icon: <Phone size={24} />,
       title: 'Call Us',
-      content: '(555) 123-4567',
-      description: 'Mon-Fri, 9am-5pm EST'
+      content: '509-385-7074',
+      description: 'Mon-Fri, 9am-5pm PST'
     }
   ];
 

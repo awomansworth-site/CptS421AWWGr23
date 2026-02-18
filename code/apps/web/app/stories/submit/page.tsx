@@ -90,7 +90,7 @@ export default function SubmitStoryPage() {
 
       {errorMsg ? (
         <div className="mt-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {errorMsg} If this keeps happening, email us at <a href="mailto:info@awomansworth.org" className="underline">info@awomansworth.org</a>.
+          {errorMsg} If this keeps happening, email us at <a href="mailto:ghallman@aww.community" className="underline">ghallman@aww.community</a>.
           <button onClick={onSubmit} className="ml-3 underline">Try again</button>
         </div>
       ) : null}
