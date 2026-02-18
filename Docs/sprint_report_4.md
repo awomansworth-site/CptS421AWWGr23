@@ -23,9 +23,9 @@ Here are links to the issues that we completed in this sprint:
 * [URL of issue 5](https://github.com/Kronera/CptS421AWWGr23/issues/29)
 ## Incomplete Issues/User Stories
 Here are links to issues we worked on but did not complete in this sprint:
-* [URL of issue 1](https://github.com/Kronera/CptS421AWWGr23/issues/30) <<issue not completed because client has not sent information about past gallery.>>
-* [URL of issue 2](https://github.com/Kronera/CptS421AWWGr23/issues/28) <<could not complete this issue this sprint because of time constraints and focusing our attention on other matters.>>
-* [URL of issue n](https://github.com/Kronera/CptS421AWWGr23/issues/1) <<The current design and service page are not yet up to what the client wants so that they can test the application.>>
+* [URL of issue 1](https://github.com/Kronera/CptS421AWWGr23/issues/30):issue not completed because client has not sent information about past gallery.
+* [URL of issue 2](https://github.com/Kronera/CptS421AWWGr23/issues/28):could not complete this issue this sprint because of time constraints and focusing our attention on other matters.
+* [URL of issue n](https://github.com/Kronera/CptS421AWWGr23/issues/1):The current design and service page are not yet up to what the client wants so that they can test the application.
 ## Code Files for Review
 Please review the following code files, which were actively developed during this
 sprint, for quality:
