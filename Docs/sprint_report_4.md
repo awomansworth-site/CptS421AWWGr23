@@ -16,11 +16,11 @@ to confirm that the design of the website is to their liking. These issues arose
 of time constraints and slow feedback from clients.
 ## Completed Issues/User Stories
 Here are links to the issues that we completed in this sprint:
-* [URL of issue 1](https://github.com/Kronera/CptS421AWWGr23/issues/31)
-* [URL of issue 2](https://github.com/Kronera/CptS421AWWGr23/issues/25)
-* [URL of issue 3](https://github.com/Kronera/CptS421AWWGr23/issues/24)
-* [URL of issue 4](https://github.com/Kronera/CptS421AWWGr23/issues/27)
-* [URL of issue 5](https://github.com/Kronera/CptS421AWWGr23/issues/29)
+* [URL of issue 31](https://github.com/Kronera/CptS421AWWGr23/issues/31)
+* [URL of issue 25](https://github.com/Kronera/CptS421AWWGr23/issues/25)
+* [URL of issue 24](https://github.com/Kronera/CptS421AWWGr23/issues/24)
+* [URL of issue 27](https://github.com/Kronera/CptS421AWWGr23/issues/27)
+* [URL of issue 29](https://github.com/Kronera/CptS421AWWGr23/issues/29)
 ## Incomplete Issues/User Stories
 Here are links to issues we worked on but did not complete in this sprint:
 * [URL of issue 1](https://github.com/Kronera/CptS421AWWGr23/issues/30):issue not completed because client has not sent information about past gallery.
@@ -37,7 +37,7 @@ Here's what went well:
 * Completed most functional goals
 * Client is satisfied with the outcomes
 * We are on pace to finish this project for client
-*Here's what we'd like to improve:
+* Here's what we'd like to improve:
 * Design of pages to satisfy client
 * Finish AI integration for site navigation
 * Finish services page to help clients manage website
