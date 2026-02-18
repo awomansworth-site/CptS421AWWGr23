@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
@@ -12,6 +12,7 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
   const [paypalReady, setPaypalReady] = useState(false);
+  const paypalButtonsRendered = useRef(false);
 
   const [shippingInfo, setShippingInfo] = useState<ShippingAddress>({
     firstName: '',
@@ -92,19 +93,18 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await createOrderInCms();
-  };
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const w = window as any;
-    if (!w.paypal || !document.getElementById('paypal-button-container')) {
+    const container = document.getElementById('paypal-button-container');
+    
+    if (!w.paypal || !container || paypalButtonsRendered.current) {
       return;
     }
 
     setPaypalReady(true);
+    paypalButtonsRendered.current = true;
 
     w.paypal
       .Buttons({
@@ -146,7 +146,7 @@ export default function CheckoutPage() {
         },
       })
       .render('#paypal-button-container');
-  }, [cart, getTotalPrice]);
+  }, [paypalReady]);
 
   useEffect(() => {
     if (cart.length === 0) {
@@ -169,10 +169,7 @@ export default function CheckoutPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white rounded-lg shadow-md p-6"
-          >
+          <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold mb-6">Shipping Information</h2>
 
             {error && (
@@ -351,40 +348,19 @@ export default function CheckoutPage() {
 
             <div className="mt-8 border-t pt-6">
               <h3 className="text-lg font-semibold mb-4">Payment Information</h3>
-              <div className="space-y-4">
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="text-gray-600 text-sm mb-2">
-                    Pay securely with PayPal. After payment is approved, your order will
-                    be created in the CMS and you will be redirected to the order
-                    confirmation page.
-                  </p>
-                  <div id="paypal-button-container" className="mt-2" />
-                  {!paypalReady && (
-                    <p className="mt-2 text-xs text-gray-500">Loading PayPal…</p>
-                  )}
-                </div>
-
-                <div className="bg-gray-50 p-4 rounded-md">
-                  <p className="text-gray-600 text-sm mb-2">
-                    Or place the order without online payment (marked as pending payment).
-                  </p>
-                  <button
-                    type="submit"
-                    disabled={isProcessing}
-                    className={`mt-2 w-full py-3 rounded-md font-medium transition-colors ${
-                      isProcessing
-                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
-                    }`}
-                  >
-                    {isProcessing
-                      ? 'Processing...'
-                      : 'Place Order Without Payment'}
-                  </button>
-                </div>
+              <div className="bg-gray-50 p-4 rounded-md">
+                <p className="text-gray-600 text-sm mb-2">
+                  Pay securely with PayPal. After payment is approved, your order will
+                  be created in the CMS and you will be redirected to the order
+                  confirmation page.
+                </p>
+                <div id="paypal-button-container" className="mt-2" />
+                {!paypalReady && (
+                  <p className="mt-2 text-xs text-gray-500">Loading PayPal…</p>
+                )}
               </div>
             </div>
-          </form>
+          </div>
         </div>
 
         <div className="lg:col-span-1">
