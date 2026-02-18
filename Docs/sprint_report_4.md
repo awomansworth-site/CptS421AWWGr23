@@ -1,5 +1,6 @@
 # Sprint 4 Report (11/5/2025 - 2/17/2026)
 ## YouTube link of Sprint * Video (Make this video unlisted)
+[sprint 4 youtube link!](https://youtu.be/f_eeGaV-DXw)
 ## What's New (User Facing)
 * Full paypal intigration for store chekcout.
 * Landing page visuals to match what client wants
