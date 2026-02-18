@@ -33,15 +33,15 @@ sprint, for quality:
 * [Name of code file 2](https://github.com/your_repo/file_extension)
 * [Name of code file 3](https://github.com/your_repo/file_extension)
 ## Retrospective Summary
-Here's what went well:
+#Here's what went well:
 * Completed most functional goals.
 * Client is satisfied with the outcomes.
 * We are on pace to finish this project for client.
-Here's what we'd like to improve:
+#Here's what we'd like to improve:
 * Design of pages to satisfy client.
 * Finish AI integration for site navigation.
 * Finish services page to help clients manage website.
-Here are changes we plan to implement in the next sprint:
+#Here are changes we plan to implement in the next sprint:
 * AI Integration
 * Service page
 * Client website testing
