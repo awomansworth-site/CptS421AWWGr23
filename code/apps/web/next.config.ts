@@ -9,6 +9,10 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: isCI,
   },
+  images: {
+    // Avoid remote domain config issues in dev/demo
+    unoptimized: true,
+  },
   experimental: {
     serverActions: {
       bodySizeLimit: "10mb",
