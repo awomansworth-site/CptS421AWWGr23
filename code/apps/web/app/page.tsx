@@ -78,11 +78,6 @@ async function getStories(): Promise<StoryCard[]> {
     const title = a?.title ?? s?.title ?? "Untitled";
     const coverUrl = pickImageUrl(a?.cover ?? s?.cover);
     const excerpt = textExcerpt(a?.body ?? s?.body ?? "", 160);
-    const coverFocalY = (a?.coverFocalY ?? s?.coverFocalY) as
-      | "top"
-      | "center"
-      | "bottom"
-      | undefined;
 
     return {
       id: s?.id ?? a?.id ?? Math.random(),
@@ -90,7 +85,6 @@ async function getStories(): Promise<StoryCard[]> {
       title,
       coverUrl,
       excerpt,
-      coverFocalY,
     };
   });
 }

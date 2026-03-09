@@ -481,7 +481,7 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     featured: Schema.Attribute.Boolean;
-    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::event.event'> &
       Schema.Attribute.Private;
@@ -514,7 +514,7 @@ export interface ApiHeroSlideHeroSlide extends Struct.CollectionTypeSchema {
     fit: Schema.Attribute.Enumeration<['cover', 'contain']>;
     focalX: Schema.Attribute.Enumeration<['left', 'center', 'right']>;
     focalY: Schema.Attribute.Enumeration<['top', 'center', 'bottom']>;
-    image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -552,7 +552,7 @@ export interface ApiSponsorSponsor extends Struct.CollectionTypeSchema {
       'api::sponsor.sponsor'
     > &
       Schema.Attribute.Private;
-    logo: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    logo: Schema.Attribute.Media<'images'>;
     name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
@@ -575,7 +575,7 @@ export interface ApiStoryStory extends Struct.CollectionTypeSchema {
   attributes: {
     authorName: Schema.Attribute.String;
     body: Schema.Attribute.Blocks;
-    cover: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    cover: Schema.Attribute.Media<'images'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

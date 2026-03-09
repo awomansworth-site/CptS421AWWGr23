@@ -4,7 +4,6 @@ export const revalidate = 0;
 const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || "http://localhost:1337";
 const media = (p?: string | null) => (!p ? "" : p.startsWith("http") ? p : `${CMS_URL}${p}`);
 import Link from "next/link";
-const FALLBACK_IMAGE = "/branding/logo.png";
 
 type StoryCard = {
   id: number;
@@ -42,7 +41,7 @@ async function getStories(): Promise<StoryCard[]> {
       documentId: r.documentId ?? a.documentId,
       title: a?.title ?? "Story",
       author: a?.authorName ?? null,
-      coverUrl: cover ? media(cover) : FALLBACK_IMAGE,
+      coverUrl: cover ? media(cover) : null,
       excerpt: firstText(a?.body) || "",
     };
   });
@@ -75,12 +74,17 @@ export default async function StoriesPage() {
           <a
             key={s.id}
             href={`/stories/${encodeURIComponent(s.documentId) || String(s.id)}`}
-            className="block overflow-hidden rounded-2xl border border-black/5 bg-white shadow transition hover:-translate-y-0.5 hover:shadow-lg"
+            className="block overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
           >
-            <div className="relative h-44 w-full bg-neutral-100">
+            <div className="aspect-[16/9] w-full">
               {s.coverUrl ? (
-                <img src={s.coverUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
-              ) : null}
+                <img src={s.coverUrl} alt="" className="h-full w-full object-cover" loading="lazy"/>
+              ) : (
+                <div className="relative h-full w-full">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#0a3680] via-[#0d4ea6] to-[#f79520]"/>
+                  <div className="absolute inset-0 opacity-10 [background:radial-gradient(circle_at_20%_20%,white,transparent_40%),radial-gradient(circle_at_80%_30%,white,transparent_35%)]"/>
+                </div>
+              )}
             </div>
             <div className="p-5">
               <h2 className="text-lg font-semibold">{s.title}</h2>

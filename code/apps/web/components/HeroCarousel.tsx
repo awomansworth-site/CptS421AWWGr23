@@ -17,9 +17,15 @@ const FALLBACK: Slide[] = [
 ];
 
 const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || "http://localhost:1337";
-const HEADLINE = "Refuse to Miss";
-const SUBHEAD  = "Your Blessings";
+const HEADLINE = "REFUSE TO MISS YOUR BLESSINGS";
 const OVERLAY  = 0.32;
+
+
+function objectPosFor(s: Slide){
+  const x = s.focalX === "left" ? "0%" : s.focalX === "right" ? "100%" : "50%";
+  const y = s.focalY === "top" ? "0%" : s.focalY === "bottom" ? "100%" : "50%";
+  return `${x} ${y}`;
+}
 
 export default function HeroCarousel() {
   const [i, setI] = useState(0);
@@ -27,9 +33,12 @@ export default function HeroCarousel() {
 
 
   useEffect(() => {
-    const t = setInterval(() => setI((p) => (p + 1) % slides.length), 5000);
+    if (!slides.length) return;
+    const t = setInterval(() => {
+      setI((p) => (p + 1) % slides.length);
+    }, 5000);
     return () => clearInterval(t);
-  }, [slides.length]);
+    }, [slides.length]);
 
 
   useEffect(() => {
@@ -61,20 +70,19 @@ export default function HeroCarousel() {
           })
           .filter(Boolean) as Slide[];
 
-        if (!cancelled && mapped.length) setSlides(mapped);
+        if (!cancelled && mapped.length){
+          setSlides(mapped);
+          setI(0);
+        }
       } catch {
       }
     })();
     return () => { cancelled = true; };
   }, []);
 
-  const current = useMemo(() => slides[i], [slides, i]);
+  const current = useMemo(() => slides[i] ?? slides[0], [slides, i]);
 
-  const objectPos =
-    `${current.focalX === "left" ? "0%" : current.focalX === "right" ? "100%" : "50%"} ` +
-    `${current.focalY === "top" ? "0%" : current.focalY === "bottom" ? "100%" : "50%"}`;
-
-  const overlayAlpha = Math.min(Math.max(OVERLAY, 0), 0.9);
+  const overlayAlpha = Math.min(Math.max(OVERLAY + 0.06, 0), 0.9);
 
   return (
     <section className="relative h-[58vh] md:h-[70vh] overflow-hidden">
@@ -83,9 +91,11 @@ export default function HeroCarousel() {
           key={`${s.src}-${idx}`}
           src={s.src}
           alt=""
-          style={{ objectPosition: objectPos }}
+          loading = {idx === 0 ? "eager" : "lazy"}
+          decoding = "async"
+          style={{ objectPosition: objectPosFor(s) }}
           className={[
-            "absolute inset-0 w-full h-full transition-opacity duration-600",
+            "absolute inset-0 w-full h-full transition-opacity duration-500",
             s.fit === "contain" ? "object-contain bg-black" : "object-cover",
             idx === i ? "opacity-100" : "opacity-0"
           ].join(" ")}
@@ -100,24 +110,20 @@ export default function HeroCarousel() {
             radial-gradient(80% 60% at 50% 40%, rgba(0,0,0,${overlayAlpha}) 0%, rgba(0,0,0,${overlayAlpha * 0.65}) 45%, rgba(0,0,0,${overlayAlpha * 0.35}) 70%, rgba(0,0,0,0) 100%),
             linear-gradient(180deg, rgba(0,0,0,${overlayAlpha * 0.7}) 0%, rgba(0,0,0,${overlayAlpha}) 60%, rgba(0,0,0,${overlayAlpha * 0.8}) 100%)
           `,
-          mixBlendMode: "multiply",
         }}
       />
 
       {/* content */}
       <div className="relative z-10 h-full flex items-center">
         <div className="mx-auto max-w-4xl px-4 text-center text-white">
-          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-[0_2px_6px_rgba(0,0,0,.6)]">
-            {HEADLINE}<br /><span className="text-[#ffefc2]">{SUBHEAD}</span>
+          <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05] md:leading-[1.0] drop-shadow-[0_2px_6px_rgba(0,0,0,.6)] tracking-[0.02em]">
+            {HEADLINE}
           </h1>
-          <p className="mt-5 text-base md:text-xl text-white/90 max-w-3xl mx-auto">
-            Empowering women to recognize their worth, embrace their potential, and create lasting change through community support and shared stories.
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/donate" className="inline-flex items-center justify-center rounded-md bg-[var(--aww-navy)] px-6 py-3 text-white btn-hover">
+          <div className="mt-7 flex flex-col items-center gap-3">
+            <Link href="/donate" className="inline-flex items-center justify-center rounded-md bg-[var(--aww-navy)] px-7 py-3 text-white btn-hover">
               Make a Donation
             </Link>
-            <Link href="/stories" className="inline-flex items-center justify-center rounded-md border border-white/70 px-6 py-3 text-white hover:bg-white hover:text-[var(--aww-navy)] transition">
+            <Link href="/stories" className="text-sm font-medium text-white/90 underline decoration-white/40 underline-offset-4 hover:text-white hover:decoration-white">
               Read Our Stories
             </Link>
           </div>

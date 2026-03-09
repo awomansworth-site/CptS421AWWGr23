@@ -8,25 +8,53 @@ type Props = {
   focalY?: "top" | "center" | "bottom";
 };
 
-const FALLBACK_STORY_IMG = "/branding/story-fallback.jpg";
+const objectPosFromFocal = (f?: "top" | "center" | "bottom") =>
+  f === "top" ? "50% 20%" : f === "bottom" ? "50% 80%" : "50% 50%"
 
-export default function StoryCard({ title, excerpt, image, href, tag, readTime, focalY }: Props) {
-  const src = image || FALLBACK_STORY_IMG;
-  const objPos = focalY === "top" ? "50% 0%" : focalY === "bottom" ? "50% 100%" : "50% 50%";
-
+export default function StoryCard({ title, excerpt, image, href, tag, readTime, focalY, }: Props) {
+  const hasImage = Boolean(image);
+  const objectPosition = objectPosFromFocal(focalY);
   return (
-    <article className="reveal rounded-2xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-      <div className="relative">
-        <img src={src} alt="" className="h-60 w-full rounded-t-2xl object-cover" style={{ objectPosition: objPos }} />
-        <div className="absolute left-3 top-3 flex items-center gap-2">
-          {tag && <span className="rounded-full bg-[#f7941D] px-2 py-1 text-xs font-medium text-white">{tag}</span>}
-          {readTime && <span className="rounded-full bg-black/60 px-2 py-1 text-xs text-white">{readTime}</span>}
-        </div>
+    <article className="reveal overflow-hidden rounded-2xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+      <div className="aspect-[16/9] w-full">
+        {hasImage ? (
+          <img
+            src={image}
+            alt={title}
+            className="h-full w-full object-cover"
+            style={{objectPosition}}
+            loading="lazy"
+            />
+        ) : (
+          <div className="relative h-full w-full">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0a3680] via-[#0d4ea6] to-[#f79520" />
+            <div className="absolute inset-0 opacity-10 [background:radial-gradient(circle_at_20%_20%,white,transparent_40%), radial-gradient(circle_at_80%_30%,white,transparent_35%"/>
+          </div>
+        )}
       </div>
 
       <div className="p-6">
-        <h3 className="text-lg font-semibold">{title}</h3>
-        {excerpt && <p className="mt-2 text-sm text-gray-600">{excerpt}</p>}
+        <div className="flex flex-wrap items-center gap-2">
+          {tag && (
+            <span className="rounded-full bg-[#f7941D] px-2 py-1 text-xs font-medium text-white">
+              {tag}
+              </span>
+            )}
+          {readTime && (
+            <span className="rounded-full bg-neutral-100 px-2 py-1 text-xs text-neutral-700">
+              {readTime}
+              </span>
+            )}
+        </div>
+        
+        <h3 className="mt-3 text-lg font-semibold text-neutral-900 line-clamp-2">
+          {title}
+        </h3>
+        {excerpt && (
+          <p className="mt-2 text-sm text-neutral-600 line-clamp-3">
+            {excerpt}
+            </p>
+          )}
 
         <a
           href={href}

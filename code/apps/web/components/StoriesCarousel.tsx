@@ -41,11 +41,10 @@ export default function StoriesCarousel({ stories }: { stories: Story[] }) {
     for (let i = 0; i < stories.length; i += pageSize) {
       out.push(stories.slice(i, i + pageSize));
     }
-    if (out.length === 0 && stories.length) out.push(stories.slice(0, pageSize));
-    if (stories.length && (stories.length < pageSize)) {
-      const need = pageSize - stories.length;
-      out[0] = [...stories, ...stories.slice(0, need)];
+    if (out.length === 0 && stories.length) {
+      out.push(stories.slice(0, pageSize));
     }
+      
     return out;
   }, [stories, pageSize]);
 
@@ -61,7 +60,7 @@ export default function StoriesCarousel({ stories }: { stories: Story[] }) {
   return (
     <div className="relative">
       {/* Slides */}
-      <div className="relative overflow-hidden">
+      <div className="relative">
         {pages.map((group, i) => (
           <div
             key={i}
@@ -75,18 +74,12 @@ export default function StoriesCarousel({ stories }: { stories: Story[] }) {
               return (
                 <Card
                   key={s.id}
-                  className="group overflow-hidden rounded-2xl border-0 bg-white shadow transition hover:-translate-y-1 hover:shadow-xl reveal"
+                  className="group rounded-2xl border bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl reveal"
                 >
-                  <img
-                    src={img}
-                    alt={s.title}
-                    style={{ objectPosition: objPos }}
-                    className="h-90 w-98 object-full"
-                  />
                   <div className="p-6">
-                    <h4 className="text-lg font-semibold text-neutral-900">{s.title}</h4>
+                    <h4 className="text-lg font-semibold text-neutral-900 line-clamp-2">{s.title}</h4>
                     {s.excerpt ? (
-                      <p className="mt-2 line-clamp-3 text-neutral-600">{s.excerpt}</p>
+                      <p className="mt-2 line-clamp-3 text-sm text-neutral-600">{s.excerpt}</p>
                     ) : null}
                     <a   href={`/stories/${encodeURIComponent((s.documentId || String(s.id)))}`} className="mt-4 inline-flex">
                       <Button
