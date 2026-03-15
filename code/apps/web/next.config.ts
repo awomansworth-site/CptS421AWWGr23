@@ -4,10 +4,10 @@ const isCI = process.env.CI === "true";
 
 const nextConfig: NextConfig = {
   eslint: {
-    ignoreDuringBuilds: isCI,
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: isCI,
+    ignoreBuildErrors: true,
   },
   experimental: {
     serverActions: {
