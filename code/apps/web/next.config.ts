@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "10mb",
     },
   },
+  images: {
+    domains: ["informed-connection-555a5a793a.strapiapp.com"],
+  },
 };
 
 export default nextConfig;
