@@ -29,7 +29,7 @@ export default function Navigation() {
               priority
               sizes="(max-width: 640px) 360px, (max-width: 768px) 380px, 400px"
               // Logo PNG has large transparent padding; scale + top-anchor keeps top visible and allows bottom bleed.
-              className="pointer-events-none object-contain object-left object-top scale-[1.5] origin-top-left translate-y-1"
+              className="pointer-events-none object-contain object-left object-top scale-[1.5] origin-top-left translate-y-1 -translate-x-6"
           />
           </div>
         </Link>
