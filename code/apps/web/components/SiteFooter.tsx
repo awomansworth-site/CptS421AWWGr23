@@ -78,13 +78,13 @@ export default function SiteFooter() {
             <ul className="mt-3 space-y-2">
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 opacity-90" />
-                <a href="mailto:info@awomansworth.org" className="hover:underline">
-                  info@awomansworth.org
+                <a href="mailto:ghallman@aww.community" className="hover:underline">
+                  ghallman@aww.community
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <Phone className="h-4 w-4 opacity-90" />
-                <span>(509) 290-7687</span>
+                <span>509-385-7074</span>
               </li>
               <li className="flex items-start gap-2">
                 <MapPin className="mt-0.5 h-4 w-4 opacity-90" />
