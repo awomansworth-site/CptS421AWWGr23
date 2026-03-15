@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 const nav = [
   { href: "/", label: "Home" },
+  { href: "/services", label: "Services" },
   { href: "/stories", label: "Stories" },
   { href: "/events", label: "Events" },
   { href: "/store", label: "Store" },
@@ -64,7 +65,7 @@ export default function Navigation() {
 
         <div className="flex items-center">
           <Link
-            href="/donate"
+            href="https://www.paypal.com/donate/?hosted_button_id=4HQXUB47ZQSUG"
             className="btn-pill bg-[var(--aww-navy)] text-white px-4 py-2 text-sm hover:bg-[#003366]"
           >
             Donate Now

@@ -9,7 +9,7 @@ export default function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-3">
           {/* Brand + Socials */}
           <div>
-            {/* Logo (bigger per your request) */}
+            {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
             <Image
               src="/branding/logo-white.png"
