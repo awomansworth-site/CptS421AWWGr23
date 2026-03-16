@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
-import { Building2, Users, Heart, Star, CheckCircle2, ArrowRight, Lightbulb, TrendingUp, Sparkles, DollarSign } from 'lucide-react';
+import { Building2, Users, Heart, Star, CheckCircle2, Lightbulb, TrendingUp, Sparkles, DollarSign } from 'lucide-react';
 import { ImageWithFallback } from '../../components/ImageWithFallback';
 
 // Animation variants
@@ -379,9 +379,6 @@ function PartnershipsPage() {
                       <p className="text-gray-600 text-lg mb-6">
                         {type.description}
                       </p>
-                      <Button className="bg-[#f7941D] hover:bg-[#F79520] text-white w-fit">
-                        Learn More <ArrowRight className="ml-2 w-4 h-4" />
-                      </Button>
                     </div>
                   </div>
                 </Card>
@@ -401,13 +398,12 @@ function PartnershipsPage() {
             <p className="text-xl mb-8 text-white/90">
               Join our community of partners dedicated to empowering women and creating lasting change
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button className="bg-[#f7941D] hover:bg-[#F79520] text-white px-8 py-6 text-lg rounded-full transition-all duration-200 hover:scale-105">
-                Become a Partner
-              </Button>
-              <Button variant="outline" className="bg-white text-[#004080] hover:bg-gray-100 px-8 py-6 text-lg rounded-full transition-all duration-200 hover:scale-105 border-2 border-white">
-                Download Partnership Guide
-              </Button>
+            <div className="flex justify-center">
+              <a href="/contact#contact-form">
+                <Button className="bg-[#f7941D] hover:bg-[#F79520] text-white px-8 py-6 text-lg rounded-full transition-all duration-200 hover:scale-105">
+                  Become a Partner
+                </Button>
+              </a>
             </div>
           </ScrollReveal>
         </div>
@@ -423,13 +419,9 @@ function PartnershipsPage() {
             <p className="text-lg text-gray-600 mb-8">
               We'd love to discuss how we can work together to empower women in our community
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <a href="mailto:partnerships@awomansworth.org" className="text-[#f7941D] hover:text-[#F79520] transition-colors text-lg">
-                partnerships@awomansworth.org
-              </a>
-              <span className="hidden sm:inline text-gray-300">|</span>
-              <a href="tel:+1234567890" className="text-[#f7941D] hover:text-[#F79520] transition-colors text-lg">
-                (123) 456-7890
+            <div className="flex justify-center">
+              <a href="mailto:ghallman@aww.community" className="text-[#f7941D] hover:text-[#F79520] transition-colors text-lg">
+                ghallman@aww.community
               </a>
             </div>
           </ScrollReveal>
