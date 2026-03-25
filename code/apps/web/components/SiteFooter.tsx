@@ -17,6 +17,7 @@ export default function SiteFooter() {
               width={210}
               height={48}
               priority
+              suppressHydrationWarning
               className="h-24 w-fit"
             />
             </Link>
@@ -31,32 +32,36 @@ export default function SiteFooter() {
                 href="https://instagram.com"
                 className="rounded-full grad-pill p-2 text-white transition"
                 target="_blank" rel="noreferrer"
+                suppressHydrationWarning
               >
-                <Instagram className="h-5 w-5" />
+                <Instagram className="h-5 w-5" suppressHydrationWarning />
               </a>
               <a
                 aria-label="Facebook"
                 href="https://facebook.com"
                 className="rounded-full grad-pill p-2 text-white transition"
                 target="_blank" rel="noreferrer"
+                suppressHydrationWarning
               >
-                <Facebook className="h-5 w-5" />
+                <Facebook className="h-5 w-5" suppressHydrationWarning />
               </a>
               <a
                 aria-label="LinkedIn"
                 href="https://linkedin.com"
                 className="rounded-full grad-pill p-2 text-white transition"
                 target="_blank" rel="noreferrer"
+                suppressHydrationWarning
               >
-                <Linkedin className="h-5 w-5" />
+                <Linkedin className="h-5 w-5" suppressHydrationWarning />
               </a>
               <a
                 aria-label="X (Twitter)"
                 href="https://x.com"
                 className="rounded-full grad-pill p-2 text-white transition"
                 target="_blank" rel="noreferrer"
+                suppressHydrationWarning
               >
-                <Twitter className="h-5 w-5" />
+                <Twitter className="h-5 w-5" suppressHydrationWarning />
               </a>
             </div>
           </div>
@@ -77,17 +82,17 @@ export default function SiteFooter() {
             <div className="font-semibold">Get in Touch</div>
             <ul className="mt-3 space-y-2">
               <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 opacity-90" />
+                <Mail className="h-4 w-4 opacity-90" suppressHydrationWarning />
                 <a href="mailto:ghallman@aww.community" className="hover:underline">
                   ghallman@aww.community
                 </a>
               </li>
               <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 opacity-90" />
+                <Phone className="h-4 w-4 opacity-90" suppressHydrationWarning />
                 <span>509-385-7074</span>
               </li>
               <li className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 opacity-90" />
+                <MapPin className="mt-0.5 h-4 w-4 opacity-90" suppressHydrationWarning />
                 <span>
                   59 E Queens Ave<br />Suite 210<br />Spokane, WA 99207
                 </span>

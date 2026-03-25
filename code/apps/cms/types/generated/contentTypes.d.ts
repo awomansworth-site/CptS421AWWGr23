@@ -528,6 +528,43 @@ export interface ApiHeroSlideHeroSlide extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiProductProduct extends Struct.CollectionTypeSchema {
+  collectionName: 'products';
+  info: {
+    displayName: 'Product';
+    pluralName: 'products';
+    singularName: 'product';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    category: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Blocks;
+    featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    Images: Schema.Attribute.Media<'images', true>;
+    inventory: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::product.product'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    price: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSponsorSponsor extends Struct.CollectionTypeSchema {
   collectionName: 'sponsors';
   info: {
@@ -851,12 +888,13 @@ export interface PluginUploadFile extends Struct.CollectionTypeSchema {
     };
   };
   attributes: {
-    alternativeText: Schema.Attribute.String;
-    caption: Schema.Attribute.String;
+    alternativeText: Schema.Attribute.Text;
+    caption: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     ext: Schema.Attribute.String;
+    focalPoint: Schema.Attribute.JSON;
     folder: Schema.Attribute.Relation<'manyToOne', 'plugin::upload.folder'> &
       Schema.Attribute.Private;
     folderPath: Schema.Attribute.String &
@@ -876,7 +914,7 @@ export interface PluginUploadFile extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     mime: Schema.Attribute.String & Schema.Attribute.Required;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    previewUrl: Schema.Attribute.String;
+    previewUrl: Schema.Attribute.Text;
     provider: Schema.Attribute.String & Schema.Attribute.Required;
     provider_metadata: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
@@ -885,7 +923,7 @@ export interface PluginUploadFile extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    url: Schema.Attribute.String & Schema.Attribute.Required;
+    url: Schema.Attribute.Text & Schema.Attribute.Required;
     width: Schema.Attribute.Integer;
   };
 }
@@ -1107,6 +1145,7 @@ declare module '@strapi/strapi' {
       'api::contact.contact': ApiContactContact;
       'api::event.event': ApiEventEvent;
       'api::hero-slide.hero-slide': ApiHeroSlideHeroSlide;
+      'api::product.product': ApiProductProduct;
       'api::sponsor.sponsor': ApiSponsorSponsor;
       'api::story.story': ApiStoryStory;
       'plugin::content-releases.release': PluginContentReleasesRelease;

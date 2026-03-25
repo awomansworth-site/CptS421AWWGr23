@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "products",
+  "info": {
+    "singularName": "product",
+    "pluralName": "products",
+    "displayName": "Product"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "price": {
+      "type": "decimal",
+      "required": true,
+      "default": 0
+    },
+    "Images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "inventory": {
+      "type": "integer",
+      "default": 0
+    },
+    "category": {
+      "type": "string"
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

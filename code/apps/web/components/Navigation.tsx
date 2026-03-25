@@ -21,12 +21,13 @@ export default function Navigation() {
     <nav className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-gray-100">
       <div className="mx-auto max-w-7xl h-20 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         <Link href="/" className="flex items-center">
-          <div className="relative z-50 h-[68px] w-[360px] sm:w-[380px]  md:w-[400px] overflow-visible">
+          <div suppressHydrationWarning className="relative z-50 h-[68px] w-[360px] sm:w-[380px]  md:w-[400px] overflow-visible">
             <Image
               src="/branding/logo.png"
               alt="A Woman's Worth"
               fill
               priority
+              suppressHydrationWarning
               sizes="(max-width: 640px) 360px, (max-width: 768px) 380px, 400px"
               // Logo PNG has large transparent padding; scale + top-anchor keeps top visible and allows bottom bleed.
               className="pointer-events-none object-contain object-left object-top scale-[1.5] origin-top-left translate-y-1 -translate-x-16"

@@ -50,12 +50,14 @@ export default async function SponsorStatsStrip() {
       {/* gradient glows */}
       <div className="pointer-events-none absolute inset-0 opacity-70">
         <div
+          suppressHydrationWarning
           className="absolute -top-24 -left-24 h-72 w-72 rounded-full blur-3xl"
           style={{
             background: "radial-gradient(closest-side, rgba(247,148,29,.35), transparent)",
           }}
         />
         <div
+          suppressHydrationWarning
           className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full blur-3xl"
           style={{
             background: "radial-gradient(closest-side, rgba(0,64,128,.35), transparent)",

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SiteFooter from "@/components/SiteFooter";
+import Navigation from "@/components/Navigation";
+import { CartProvider } from "@/app/context/CartContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,15 +20,15 @@ export const metadata: Metadata = {
   description: "Empowering women through community, support, and transformative programs.",
 };
 
-import Navigation from "@/components/Navigation";
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body>
-        <Navigation />
-        {children}
-        <SiteFooter />
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        <CartProvider>
+          <Navigation />
+          {children}
+          <SiteFooter />
+        </CartProvider>
       </body>
     </html>
   );

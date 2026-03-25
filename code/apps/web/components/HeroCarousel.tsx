@@ -104,6 +104,7 @@ export default function HeroCarousel() {
 
       {/* readability overlay */}
       <div
+        suppressHydrationWarning
         className="absolute inset-0"
         style={{
           background: `
