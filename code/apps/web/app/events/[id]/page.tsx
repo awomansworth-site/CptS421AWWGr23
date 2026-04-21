@@ -13,13 +13,31 @@ const mediaUrl = (p?: string | null) =>
 const pickImageUrl = (img: any): string | null =>
   img?.url || img?.data?.attributes?.url || null;
 
-function fmtDate(iso?: string | null) {
+function fmtDateOnly(iso?: string | null) {
   if (!iso) return "TBA";
   try {
-    const d = new Date(iso);
-    return d.toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+    return new Date(iso).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    });
   } catch {
     return "TBA";
+  }
+}
+
+function fmtTime(iso?: string | null) {
+  if (!iso) return null;
+  try {
+    return new Date(iso).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+      timeZone: "UTC",
+    });
+  } catch {
+    return null;
   }
 }
 
@@ -132,33 +150,33 @@ export default async function EventDetailsPage({
         </div>
       </section>
 
-      {/* hero image with blurred backdrop */}
+      {/* hero image */}
       <section className="mt-6 overflow-hidden rounded-2xl border border-black/5 bg-white shadow">
-        <div className="relative">
-          <div
-            aria-hidden
-            className="absolute inset-0 scale-110 blur-lg"
-            style={{
-              backgroundImage: `url(${data.imageUrl})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
+        <div className="h-64 sm:h-80 w-full overflow-hidden bg-neutral-200">
+          <img
+            src={data.imageUrl || FALLBACK_IMG}
+            alt={data.title}
+            className="h-full w-full object-cover"
           />
-          <div className="relative h-64 sm:h-80 w-full bg-neutral-100">
-            <img
-              src={data.imageUrl || FALLBACK_IMG}
-              alt={data.title}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
         </div>
 
         <div className="p-6">
           <div className="space-y-1 text-sm text-neutral-700">
             <div className="flex items-center gap-2">
               <Cal className="h-4 w-4" />
-              {fmtDate(data.startDateTime)}
+              {fmtDateOnly(data.startDateTime)}
             </div>
+            {(fmtTime(data.startDateTime) || fmtTime(data.endDateTime)) && (
+              <div className="flex items-center gap-2 pl-6">
+                {fmtTime(data.startDateTime)}
+                {fmtTime(data.endDateTime) && (
+                  <>
+                    <span>–</span>
+                    {fmtTime(data.endDateTime)}
+                  </>
+                )}
+              </div>
+            )}
             {data.location && (
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
@@ -182,10 +200,7 @@ export default async function EventDetailsPage({
             </div>
           )}
 
-          <div className="mt-6 flex flex-wrap gap-3">
-            <span className="inline-flex items-center rounded-md bg-[var(--aww-orange,#f7941D)] px-4 py-2 text-white">
-              Registration Coming Soon
-            </span>
+          <div className="mt-6">
             <a
               href="/events"
               className="inline-flex items-center rounded-md border px-4 py-2 hover:bg-neutral-50"

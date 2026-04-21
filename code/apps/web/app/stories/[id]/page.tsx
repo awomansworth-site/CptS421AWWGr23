@@ -23,7 +23,7 @@ async function fetchStory(id: string): Promise<StoryItem | null> {
     ? `${CMS_URL}/api/stories?filters[documentId][$eq]=${encodeURIComponent(id)}&populate=cover`
     : `${CMS_URL}/api/stories/${encodeURIComponent(id)}?populate=cover`;
 
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { next: { revalidate: 30 } });
   if (!res.ok) return null;
 
   const json = await res.json();

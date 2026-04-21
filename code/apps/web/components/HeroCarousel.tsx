@@ -1,45 +1,45 @@
-"use client";
+﻿"use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { ChevronLeft, ChevronRight, Heart, ArrowRight } from "lucide-react";
 
-type Slide = {
-  src: string;
-  focalX: "left" | "center" | "right";
-  focalY: "top" | "center" | "bottom";
-  fit: "cover" | "contain";
-};
+type Slide = { src: string; alt: string; objectPosition?: string };
 
-const FALLBACK: Slide[] = [
-  { src: "/hero/slide-1.jpeg", focalX: "center", focalY: "center", fit: "cover" },
-  { src: "/hero/slide-2.jpeg", focalX: "center", focalY: "center", fit: "cover" },
-  { src: "/hero/slide-3.jpeg", focalX: "center", focalY: "center", fit: "cover" },
+const LOCAL_SLIDES: Slide[] = [
+  { src: "/hero/slide-2.jpeg", alt: "A Woman's Worth community" },
+  { src: "/hero/slide-1.jpeg", alt: "A Woman's Worth event" },
+  { src: "/hero/slide-3.jpeg", alt: "A Woman's Worth empowerment" },
+  { src: "/hero/slide-4.jpeg", alt: "A Woman's Worth celebration", objectPosition: "center 12%" },
 ];
 
 const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || "http://localhost:1337";
-const HEADLINE = "REFUSE TO MISS YOUR BLESSINGS";
-const OVERLAY  = 0.32;
-
-
-function objectPosFor(s: Slide){
-  const x = s.focalX === "left" ? "0%" : s.focalX === "right" ? "100%" : "50%";
-  const y = s.focalY === "top" ? "0%" : s.focalY === "bottom" ? "100%" : "50%";
-  return `${x} ${y}`;
-}
 
 export default function HeroCarousel() {
-  const [i, setI] = useState(0);
-  const [slides, setSlides] = useState<Slide[]>(FALLBACK);
+  const [slides, setSlides] = useState<Slide[]>(LOCAL_SLIDES);
+  const [current, setCurrent] = useState(0);
+  // Refs to Ken Burns wrapper divs — animation restarted via direct DOM,
+  // nothing ever remounts so there is zero decode jitter.
+  const kbRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  const restartKenBurns = (idx: number) => {
+    const el = kbRefs.current[idx];
+    if (!el) return;
+    el.style.animation = "none";
+    void el.offsetHeight; // flush reflow so the browser resets the animation
+    el.style.animation = "kenBurns 8s ease-out forwards";
+  };
+
+  const go = (next: number) => {
+    const n = (next + slides.length) % slides.length;
+    restartKenBurns(n);
+    setCurrent(n);
+  };
 
   useEffect(() => {
-    if (!slides.length) return;
-    const t = setInterval(() => {
-      setI((p) => (p + 1) % slides.length);
-    }, 5000);
+    const t = setInterval(() => go(current + 1), 5000);
     return () => clearInterval(t);
-    }, [slides.length]);
-
+  }, [current, slides.length]);
 
   useEffect(() => {
     let cancelled = false;
@@ -49,97 +49,108 @@ export default function HeroCarousel() {
         if (!res.ok) return;
         const json = await res.json();
         const rows: any[] = Array.isArray(json) ? json : json?.data || [];
-
         const mapped: Slide[] = rows
           .map((node: any) => node?.attributes ?? node)
           .map((a: any) => {
-            let raw = "";
-            if (a?.image?.url) raw = a.image.url;
-            else if (a?.image?.data?.attributes?.url) raw = a.image.data.attributes.url;
-            else if (Array.isArray(a?.image?.data) && a.image.data[0]?.attributes?.url) raw = a.image.data[0].attributes.url;
-
-            const src = raw ? (raw.startsWith("http") ? raw : `${CMS_URL}${raw}`) : "";
-
-            const focalX = (a?.focalX ?? a?.FocalX ?? "center") as Slide["focalX"];
-            const focalY = (a?.focalY ?? a?.FocalY ?? "center") as Slide["focalY"];
-            const fit = (a?.fit ?? a?.Fit ?? "cover") as Slide["fit"];
-
-            return src
-              ? { src, focalX, focalY, fit }
-              : null;
+            const raw =
+              a?.image?.url ||
+              a?.image?.data?.attributes?.url ||
+              (Array.isArray(a?.image?.data) && a.image.data[0]?.attributes?.url) ||
+              "";
+            if (!raw) return null;
+            return { src: raw.startsWith("http") ? raw : `${CMS_URL}${raw}`, alt: a?.alt || "" };
           })
           .filter(Boolean) as Slide[];
-
-        if (!cancelled && mapped.length){
-          setSlides(mapped);
-          setI(0);
-        }
-      } catch {
-      }
+        if (!cancelled && mapped.length) { setSlides(mapped); setCurrent(0); }
+      } catch { /* keep LOCAL_SLIDES */ }
     })();
     return () => { cancelled = true; };
   }, []);
 
-  const current = useMemo(() => slides[i] ?? slides[0], [slides, i]);
-
-  const overlayAlpha = Math.min(Math.max(OVERLAY + 0.06, 0), 0.9);
-
   return (
-    <section className="relative h-[58vh] md:h-[70vh] overflow-hidden">
+    <section className="relative h-[70vh] min-h-[500px] max-h-[700px] flex items-center justify-center overflow-hidden">
       {slides.map((s, idx) => (
-        <img
-          key={`${s.src}-${idx}`}
-          src={s.src}
-          alt=""
-          loading = {idx === 0 ? "eager" : "lazy"}
-          decoding = "async"
-          style={{ objectPosition: objectPosFor(s) }}
-          className={[
-            "absolute inset-0 w-full h-full transition-opacity duration-500",
-            s.fit === "contain" ? "object-contain bg-black" : "object-cover",
-            idx === i ? "opacity-100" : "opacity-0"
-          ].join(" ")}
-        />
-      ))}
-
-      {/* readability overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(80% 60% at 50% 40%, rgba(0,0,0,${overlayAlpha}) 0%, rgba(0,0,0,${overlayAlpha * 0.65}) 45%, rgba(0,0,0,${overlayAlpha * 0.35}) 70%, rgba(0,0,0,0) 100%),
-            linear-gradient(180deg, rgba(0,0,0,${overlayAlpha * 0.7}) 0%, rgba(0,0,0,${overlayAlpha}) 60%, rgba(0,0,0,${overlayAlpha * 0.8}) 100%)
-          `,
-        }}
-      />
-
-      {/* content */}
-      <div className="relative z-10 h-full flex items-center">
-        <div className="mx-auto max-w-4xl px-4 text-center text-white">
-          <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05] md:leading-[1.0] drop-shadow-[0_2px_6px_rgba(0,0,0,.6)] tracking-[0.02em]">
-            {HEADLINE}
-          </h1>
-          <div className="mt-7 flex flex-col items-center gap-3">
-            <Link href="/donate" className="inline-flex items-center justify-center rounded-md bg-[var(--aww-navy)] px-7 py-3 text-white btn-hover">
-              Make a Donation
-            </Link>
-            <Link href="/stories" className="text-sm font-medium text-white/90 underline decoration-white/40 underline-offset-4 hover:text-white hover:decoration-white">
-              Read Our Stories
-            </Link>
-          </div>
-
-          {/* dots */}
-          <div className="mt-8 flex items-center justify-center gap-2">
-            {slides.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setI(idx)}
-                className={`h-2.5 w-2.5 rounded-full transition ${i === idx ? "bg-white" : "bg-white/40"}`}
-                aria-label={`Go to slide ${idx + 1}`}
-              />
-            ))}
+        <div
+          key={`slide-${idx}`}
+          className="absolute inset-0"
+          style={{
+            opacity: idx === current ? 1 : 0,
+            transition: 'opacity 1800ms cubic-bezier(0.4, 0, 0.2, 1)',
+            zIndex: idx === current ? 1 : 0,
+            willChange: 'opacity',
+          }}
+        >
+          {/* Ken Burns wrapper — never remounted; animation restarted via DOM ref */}
+          <div
+            ref={(el) => { kbRefs.current[idx] = el; }}
+            className="w-full h-full"
+            style={{ willChange: 'transform' }}
+          >
+            <img
+              src={s.src}
+              alt={s.alt}
+              loading="eager"
+              decoding="async"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: s.objectPosition ?? 'center center' }}
+            />
           </div>
         </div>
+      ))}
+
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/50" />
+
+      <div className="relative z-10 text-center text-white w-full px-8">
+        <h1
+          className="font-extrabold uppercase tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] whitespace-nowrap"
+          style={{ fontSize: 'clamp(1.2rem, 3vw, 2.8rem)', lineHeight: 1.1 }}
+        >
+          Refuse to Miss <span className="text-[#f7941D]">Your Blessings</span>
+        </h1>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+          <Link
+            href="/donate"
+            className="inline-flex items-center justify-center gap-2 bg-[#004080] hover:bg-[#003066] text-white px-8 py-3 font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          >
+            <Heart size={18} />
+            Make a Donation
+          </Link>
+          <Link
+            href="/stories"
+            className="inline-flex items-center justify-center gap-2 border-2 border-white/80 text-white hover:bg-white hover:text-[#f7941D] px-8 py-3 font-semibold rounded-full bg-white/10 backdrop-blur-sm transition-all duration-300 hover:scale-105"
+          >
+            Read Our Stories
+            <ArrowRight size={18} />
+          </Link>
+        </div>
+      </div>
+
+      <button
+        onClick={() => go(current - 1)}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/35 backdrop-blur-sm rounded-full p-3 transition-all duration-300 hover:scale-110"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft className="text-white" size={20} />
+      </button>
+      <button
+        onClick={() => go(current + 1)}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/35 backdrop-blur-sm rounded-full p-3 transition-all duration-300 hover:scale-110"
+        aria-label="Next slide"
+      >
+        <ChevronRight className="text-white" size={20} />
+      </button>
+
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        {slides.map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => go(idx)}
+            className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              idx === current ? "bg-white scale-125" : "bg-white/50 hover:bg-white/75"
+            }`}
+            aria-label={`Go to slide ${idx + 1}`}
+          />
+        ))}
       </div>
     </section>
   );

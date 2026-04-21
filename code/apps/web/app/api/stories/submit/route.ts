@@ -19,20 +19,23 @@ export async function POST(req: Request) {
 
     let coverId: number | null = null;
     if (file && typeof file === "object") {
-      const fd = new FormData();
-      fd.append("files", file, file.name || "upload.jpg");
+      try {
+        const fd = new FormData();
+        fd.append("files", file, file.name || "upload.jpg");
 
-      const up = await fetch(`${STRAPI_URL}/api/upload`, {
-        method: "POST",
-        headers: STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : undefined,
-        body: fd,
-      });
-      if (!up.ok) {
-        const t = await up.text();
-        return NextResponse.json({ ok: false, stage: "upload", message: t }, { status: 400 });
+        const up = await fetch(`${STRAPI_URL}/api/upload`, {
+          method: "POST",
+          headers: STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : undefined,
+          body: fd,
+        });
+        if (up.ok) {
+          const j = await up.json();
+          coverId = j?.[0]?.id ?? null;
+        }
+        // If upload fails (e.g. no token / auth required), continue without image
+      } catch {
+        // Network error on upload — continue without image
       }
-      const j = await up.json();
-      coverId = j?.[0]?.id ?? null;
     }
 
 

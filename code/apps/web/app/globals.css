@@ -30,6 +30,12 @@
   background: linear-gradient(180deg, rgba(247,148,29,0.90) 0%, rgba(255,184,77,0.75) 100%);
 }
 
+@keyframes kenBurns {
+  from { transform: scale(1.07); }
+  to   { transform: scale(1.0); }
+}
+
+
 /* CTA band gradient (deep navy) */
 .cta-band {
   background: radial-gradient(80% 120% at 100% 0%, rgba(255,255,255,.06) 0%, rgba(255,255,255,0) 50%),

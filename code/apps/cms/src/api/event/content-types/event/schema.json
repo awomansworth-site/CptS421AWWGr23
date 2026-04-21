@@ -17,6 +17,9 @@
     "startDateTime": {
       "type": "datetime"
     },
+    "endDateTime": {
+      "type": "datetime"
+    },
     "location": {
       "type": "string"
     },

@@ -27,25 +27,25 @@ export default function SiteFooter() {
 
             <div className="mt-4 flex items-center gap-3">
               <a
-                aria-label="Instagram"
-                href="https://instagram.com"
-                className="rounded-full grad-pill p-2 text-white transition"
-                target="_blank" rel="noreferrer"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a
                 aria-label="Facebook"
-                href="https://facebook.com"
-                className="rounded-full grad-pill p-2 text-white transition"
+                href="https://www.facebook.com/profile.php?id=100089752024921"
+                className="w-11 h-11 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center text-white transition-colors shadow-lg"
                 target="_blank" rel="noreferrer"
               >
                 <Facebook className="h-5 w-5" />
               </a>
               <a
+                aria-label="Instagram"
+                href="https://www.instagram.com/awomans_worth/"
+                className="w-11 h-11 bg-gradient-to-br from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 rounded-full flex items-center justify-center text-white transition-colors shadow-lg"
+                target="_blank" rel="noreferrer"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a
                 aria-label="LinkedIn"
                 href="https://linkedin.com"
-                className="rounded-full grad-pill p-2 text-white transition"
+                className="w-11 h-11 bg-blue-700 hover:bg-blue-800 rounded-full flex items-center justify-center text-white transition-colors shadow-lg"
                 target="_blank" rel="noreferrer"
               >
                 <Linkedin className="h-5 w-5" />
@@ -53,7 +53,7 @@ export default function SiteFooter() {
               <a
                 aria-label="X (Twitter)"
                 href="https://x.com"
-                className="rounded-full grad-pill p-2 text-white transition"
+                className="w-11 h-11 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg"
                 target="_blank" rel="noreferrer"
               >
                 <Twitter className="h-5 w-5" />
