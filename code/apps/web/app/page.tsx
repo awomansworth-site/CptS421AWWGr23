@@ -12,7 +12,7 @@ import SponsorStatsStrip from "@/components/SponsorStatsStrip";
 
 // ---------- helpers ----------
 const CMS_URL =
-  process.env.NEXT_PUBLIC_CMS_URL || CMS_URL_FROM_LIB || "http://localhost:1337";
+  process.env.NEXT_PUBLIC_CMS_URL || CMS_URL_FROM_LIB ;
 
 function mediaUrl(path?: string | null) {
   if (!path) return "";
