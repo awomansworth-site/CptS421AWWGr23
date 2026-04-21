@@ -113,13 +113,15 @@ export default function HeroCarousel() {
           Refuse to Miss <span className="text-[#f7941D]">Your Blessings</span>
         </h1>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-          <Link
-            href="/donate"
+          <a
+            href="https://www.paypal.com/donate/?hosted_button_id=4HQXUB47ZQSUG"
+            target="_blank"
+            rel="noreferrer"
             className="inline-flex items-center justify-center gap-2 bg-[#004080] hover:bg-[#003066] text-white px-8 py-3 font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           >
             <Heart size={18} />
             Make a Donation
-          </Link>
+          </a>
           <Link
             href="/stories"
             className="inline-flex items-center justify-center gap-2 border-2 border-white/80 text-white hover:bg-white hover:text-[#f7941D] px-8 py-3 font-semibold rounded-full bg-white/10 backdrop-blur-sm transition-all duration-300 hover:scale-105"
