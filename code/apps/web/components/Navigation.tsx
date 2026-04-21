@@ -48,6 +48,29 @@ export default function Navigation() {
           <div className="hidden md:flex items-center gap-1">
             {NAV.map((n) => {
               const active = isActive(n.href, pathname);
+              // Home link skips motion wrapper — same-page navigation needs a clean click
+              if (n.href === "/") {
+                return (
+                  <div key={n.href} className="relative">
+                    <Link
+                      href={n.href}
+                      className={`block px-3 py-2 text-[15px] font-medium rounded transition-colors ${
+                        active ? "text-[#f7941D]" : "text-gray-600 hover:text-[#f7941D]"
+                      }`}
+                    >
+                      {n.label}
+                    </Link>
+                    {active && (
+                      <motion.span
+                        layoutId="activeUnderline"
+                        className="absolute bottom-0 left-2 right-2 h-0.5 bg-[#f7941D] rounded-full"
+                        initial={false}
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                      />
+                    )}
+                  </div>
+                );
+              }
               return (
                 <motion.div
                   key={n.href}

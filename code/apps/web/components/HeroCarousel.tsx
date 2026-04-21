@@ -36,6 +36,11 @@ export default function HeroCarousel() {
     setCurrent(n);
   };
 
+  // Kick off Ken Burns on the first slide once refs are ready
+  useEffect(() => {
+    restartKenBurns(0);
+  }, []);
+
   useEffect(() => {
     const t = setInterval(() => go(current + 1), 5000);
     return () => clearInterval(t);
