@@ -15,7 +15,18 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    domains: ["informed-connection-555a5a793a.strapiapp.com"],
+    // `domains` is legacy and doesn't support wildcards. Use `remotePatterns`
+    // so any Strapi Cloud host (app + media subdomains) is allowed.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.strapiapp.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.media.strapiapp.com",
+      },
+    ],
   },
 };
 
