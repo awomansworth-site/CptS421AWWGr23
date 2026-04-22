@@ -18,7 +18,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   // Get the first image from the images array
   const firstImage = product.images?.data?.[0];
-  const imageUrl = firstImage?.attributes?.url;
+  const rawImageUrl = firstImage?.attributes?.url;
+  // Strapi Cloud returns absolute URLs (https://....media.strapiapp.com/...).
+  // Self-hosted Strapi returns relative ones (/uploads/...). Handle both.
+  const imageUrl = rawImageUrl
+    ? /^https?:\/\//i.test(rawImageUrl)
+      ? rawImageUrl
+      : `${CMS_URL}${rawImageUrl}`
+    : '';
   const imageAlt = firstImage?.attributes?.alternativeText || product.name;
 
   return (
@@ -26,9 +33,10 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="aspect-w-1 aspect-h-1 w-full h-64 relative bg-gray-200">
         {imageUrl ? (
           <Image
-            src={`${CMS_URL}${imageUrl}`}
+            src={imageUrl}
             alt={imageAlt}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             className="object-cover"
           />
         ) : (
