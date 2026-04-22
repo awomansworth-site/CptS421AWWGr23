@@ -8,6 +8,13 @@ export default function CartPage() {
   const { cart, removeFromCart, updateQuantity, getTotalPrice, clearCart } = useCart();
   const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || '';
 
+  // Strapi Cloud returns absolute URLs (https://...media.strapiapp.com/...).
+  // Self-hosted Strapi returns relative ones (/uploads/...). Handle both.
+  const resolveImageUrl = (url?: string | null): string => {
+    if (!url) return '';
+    return /^https?:\/\//i.test(url) ? url : `${CMS_URL}${url}`;
+  };
+
   if (cart.length === 0) {
     return (
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -59,9 +66,10 @@ export default function CartPage() {
                   <div className="w-24 h-24 relative bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
                     {item.product.images?.data?.[0]?.attributes?.url ? (
                       <Image
-                        src={`${CMS_URL}${item.product.images.data[0].attributes.url}`}
+                        src={resolveImageUrl(item.product.images.data[0].attributes.url)}
                         alt={item.product.name}
                         fill
+                        sizes="96px"
                         className="object-cover"
                       />
                     ) : (
