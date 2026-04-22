@@ -6,12 +6,17 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/app/context/CartContext';
 import { ShippingAddress } from '@/app/types';
 
+const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, getTotalPrice, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
   const [paypalReady, setPaypalReady] = useState(false);
+  const [paypalLoadError, setPaypalLoadError] = useState<string | null>(
+    PAYPAL_CLIENT_ID ? null : 'PayPal is not configured for this site. (Missing NEXT_PUBLIC_PAYPAL_CLIENT_ID)'
+  );
   const paypalButtonsRendered = useRef(false);
 
   const [shippingInfo, setShippingInfo] = useState<ShippingAddress>({
@@ -160,11 +165,18 @@ export default function CheckoutPage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Script
-        src={`https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=USD`}
-        strategy="afterInteractive"
-        onLoad={() => setPaypalReady(true)}
-      />
+      {PAYPAL_CLIENT_ID && (
+        <Script
+          src={`https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`}
+          strategy="afterInteractive"
+          onLoad={() => setPaypalReady(true)}
+          onError={() =>
+            setPaypalLoadError(
+              'PayPal SDK failed to load. Check that NEXT_PUBLIC_PAYPAL_CLIENT_ID is valid and the site URL is whitelisted in the PayPal developer dashboard.'
+            )
+          }
+        />
+      )}
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -355,9 +367,11 @@ export default function CheckoutPage() {
                   confirmation page.
                 </p>
                 <div id="paypal-button-container" className="mt-2" />
-                {!paypalReady && (
+                {paypalLoadError ? (
+                  <p className="mt-2 text-xs text-red-600">{paypalLoadError}</p>
+                ) : !paypalReady ? (
                   <p className="mt-2 text-xs text-gray-500">Loading PayPal…</p>
-                )}
+                ) : null}
               </div>
             </div>
           </div>
