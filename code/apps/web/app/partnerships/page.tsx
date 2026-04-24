@@ -1,11 +1,51 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'motion/react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent } from '../../components/ui/card';
-import { Building2, Users, Heart, Star, CheckCircle2, Lightbulb, TrendingUp, Sparkles, DollarSign } from 'lucide-react';
+import { Building2, Users, Heart, Star, CheckCircle2, Lightbulb, TrendingUp, Sparkles, DollarSign, ExternalLink, Award } from 'lucide-react';
 import { ImageWithFallback } from '../../components/ImageWithFallback';
+
+const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || "http://localhost:1337";
+
+type Sponsor = {
+  id: number;
+  name: string;
+  url: string | null;
+  logoUrl: string | null;
+  blurb: string | null;
+  tier: string | null;
+  sponsorType: string | null;
+  amountLabel: string | null;
+  callout: string | null;
+  featured: boolean;
+  displayOrder: number;
+};
+
+const PLACEHOLDER_SPONSORS: Sponsor[] = [
+  { id: 9001, name: "Evergreen Community Bank", url: null, logoUrl: null, tier: "Legacy Sponsor", sponsorType: "Sponsor", amountLabel: "$10,000+", callout: "Investing in women-led futures", blurb: "Evergreen Community Bank has been a cornerstone partner of AWW, providing financial resources to help women achieve economic stability and independence.", featured: true, displayOrder: 1 },
+  { id: 9002, name: "Northwest Women's Wellness Collective", url: null, logoUrl: null, tier: "Empowerment Sponsor", sponsorType: "Sponsor", amountLabel: "$5,000+", callout: "Holistic health for whole communities", blurb: "Supporting AWW's health and wellness programming so women have access to mental, physical, and emotional wellbeing resources.", featured: false, displayOrder: 2 },
+  { id: 9003, name: "Horizon Legal Aid Partners", url: null, logoUrl: null, tier: "Empowerment Sponsor", sponsorType: "Grant Partner", amountLabel: "$5,000+", callout: "Justice for every woman", blurb: "Horizon Legal Aid provides pro bono legal guidance to AWW participants navigating housing, custody, and employment challenges.", featured: false, displayOrder: 3 },
+  { id: 9004, name: "Unity Family Resource Center", url: null, logoUrl: null, tier: "Community Sponsor", sponsorType: "Partner", amountLabel: "$1,000+", callout: "Families stronger together", blurb: "Unity Family Resource Center partners with AWW on childcare and family support services, removing barriers so moms can focus on growth.", featured: false, displayOrder: 4 },
+];
+
+const TIER_BADGE: Record<string, string> = {
+  "Legacy Sponsor":      "bg-yellow-100 text-yellow-800 border border-yellow-300",
+  "Empowerment Sponsor": "bg-purple-100 text-purple-800 border border-purple-300",
+  "Community Sponsor":   "bg-blue-100 text-blue-800 border border-blue-300",
+  "Partner":             "bg-green-100 text-green-800 border border-green-300",
+};
+
+function mediaUrl(p?: string | null): string | null {
+  if (!p) return null;
+  return p.startsWith("http") ? p : `${CMS_URL}${p}`;
+}
+
+function pickImage(img: any): string | null {
+  return img?.url || img?.data?.attributes?.url ||
+    (Array.isArray(img?.data) ? img.data[0]?.attributes?.url : null) || null;
+}
 
 // Animation variants
 const fadeInUp = {
@@ -69,6 +109,45 @@ function ScrollReveal({ children, variants = fadeInUp, className = "" }: {
 }
 
 function PartnershipsPage() {
+  const [sponsors, setSponsors] = useState<Sponsor[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const url =
+          `${CMS_URL}/api/sponsors?` +
+          `populate=logo&filters[active][$eq]=true` +
+          `&sort=displayOrder:asc&pagination[pageSize]=50`;
+        const res = await fetch(url);
+        if (!res.ok) { setSponsors(PLACEHOLDER_SPONSORS); return; }
+        const rows: any[] = (await res.json())?.data ?? [];
+        if (!rows.length) { setSponsors(PLACEHOLDER_SPONSORS); return; }
+        setSponsors(rows.map((row) => {
+          const a = row?.attributes ?? row;
+          const img = pickImage(a?.logo);
+          return {
+            id: row.id ?? a.id,
+            name: a?.name ?? "Sponsor",
+            url: a?.url ?? null,
+            logoUrl: img ? mediaUrl(img) : null,
+            tier: a?.tier ?? null,
+            sponsorType: a?.sponsorType ?? null,
+            amountLabel: a?.amountLabel ?? null,
+            callout: a?.callout ?? null,
+            blurb: typeof a?.blurb === "string" ? a.blurb :
+              Array.isArray(a?.blurb) ? a.blurb.map((b: any) =>
+                (b?.children ?? []).map((c: any) => c?.text ?? "").join("")
+              ).join(" ") : null,
+            featured: a?.featured ?? false,
+            displayOrder: a?.displayOrder ?? 0,
+          } as Sponsor;
+        }));
+      } catch {
+        setSponsors(PLACEHOLDER_SPONSORS);
+      }
+    })();
+  }, []);
+
   const partnershipTypes = [
     {
       icon: Users,
@@ -385,6 +464,156 @@ function PartnershipsPage() {
               </ScrollReveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Our Sponsors */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#004080] to-[#003066] text-white px-6 py-2 rounded-full mb-6">
+              <Award className="w-5 h-5" />
+              <span className="font-medium">Our Sponsors</span>
+            </div>
+            <h2 className="text-4xl md:text-5xl text-[#004080] mb-4">Community Champions</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Generous sponsors who invest in women's futures and make our mission possible.
+            </p>
+          </ScrollReveal>
+
+          {sponsors.length > 0 && (
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-40px" }}
+              className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {sponsors.map((s) => {
+                const badgeClass = s.tier ? (TIER_BADGE[s.tier] ?? "bg-gray-100 text-gray-700 border border-gray-200") : null;
+                return (
+                  <motion.div key={s.id} variants={fadeInUp}>
+                    <Card className="h-full flex flex-col overflow-hidden border border-black/5 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white">
+                      <div className="h-24 bg-gradient-to-br from-[#004080]/5 to-[#f7941D]/10 flex items-center justify-center p-4 border-b border-black/5">
+                        {s.logoUrl ? (
+                          <img src={s.logoUrl} alt={s.name} className="max-h-16 max-w-full object-contain" />
+                        ) : (
+                          <Building2 className="w-10 h-10 text-[#004080]/30" />
+                        )}
+                      </div>
+                      <CardContent className="p-5 flex flex-col flex-1">
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          {s.tier && badgeClass && (
+                            <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeClass}`}>{s.tier}</span>
+                          )}
+                          {s.sponsorType && s.sponsorType !== "Sponsor" && (
+                            <span className="rounded-full px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">{s.sponsorType}</span>
+                          )}
+                        </div>
+                        <h3 className="text-lg font-bold text-[#004080] mb-1">{s.name}</h3>
+                        {s.callout && (
+                          <p className="text-sm text-[#f7941D] font-semibold mb-2 italic">"{s.callout}"</p>
+                        )}
+                        {s.blurb && (
+                          <p className="text-sm text-gray-600 mb-3 flex-1 line-clamp-3">{s.blurb}</p>
+                        )}
+                        <div className="flex items-center justify-between mt-auto pt-3 border-t border-neutral-100">
+                          {s.amountLabel && (
+                            <span className="flex items-center gap-1 text-xs text-[#f7941D] font-semibold">
+                              <DollarSign className="w-3 h-3" /> {s.amountLabel}
+                            </span>
+                          )}
+                          {s.url && (
+                            <a href={s.url} target="_blank" rel="noopener noreferrer"
+                              className="ml-auto inline-flex items-center gap-1 text-xs text-[#004080] hover:text-[#f7941D] transition-colors font-medium">
+                              Visit <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          )}
+        </div>
+      </section>
+
+      {/* Sponsorship Tiers */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl text-[#004080] mb-4">Sponsorship Tiers</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Choose the level that fits your organization and magnify your community impact.
+            </p>
+          </ScrollReveal>
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid md:grid-cols-3 gap-8"
+          >
+            {[
+              {
+                tier: "Community Sponsor",
+                amount: "$1,000+",
+                color: "from-blue-600 to-blue-800",
+                icon: Users,
+                perks: ["Logo on website", "Newsletter mention", "Social media shoutout", "Event recognition"],
+              },
+              {
+                tier: "Empowerment Sponsor",
+                amount: "$5,000+",
+                color: "from-[#f7941D] to-[#d4740e]",
+                icon: Star,
+                highlighted: true,
+                perks: ["Everything in Community", "Feature article in newsletter", "Banner at events", "Dedicated impact report", "Quarterly partner call"],
+              },
+              {
+                tier: "Legacy Sponsor",
+                amount: "$10,000+",
+                color: "from-[#004080] to-[#003066]",
+                icon: Award,
+                perks: ["Everything in Empowerment", "Named program recognition", "Speaking opportunity at Gala", "Custom impact video", "Advisory relationship"],
+              },
+            ].map((t, i) => {
+              const Icon = t.icon;
+              return (
+                <motion.div key={i} variants={fadeInUp}>
+                  <Card className={`h-full flex flex-col overflow-hidden border-0 shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${t.highlighted ? "ring-2 ring-[#f7941D]" : ""}`}>
+                    <div className={`bg-gradient-to-br ${t.color} p-8 text-white text-center`}>
+                      <Icon className="w-10 h-10 mx-auto mb-3 opacity-90" />
+                      <h3 className="text-2xl font-extrabold mb-1">{t.tier}</h3>
+                      <p className="text-3xl font-bold text-white/90">{t.amount}</p>
+                      {t.highlighted && (
+                        <span className="mt-3 inline-block rounded-full bg-white/20 px-3 py-0.5 text-xs font-semibold uppercase tracking-widest">
+                          Most Popular
+                        </span>
+                      )}
+                    </div>
+                    <CardContent className="flex-1 p-6 flex flex-col">
+                      <ul className="space-y-2 flex-1 mb-6">
+                        {t.perks.map((perk, j) => (
+                          <li key={j} className="flex items-start gap-2 text-sm text-gray-700">
+                            <CheckCircle2 className="w-4 h-4 text-[#f7941D] shrink-0 mt-0.5" />
+                            {perk}
+                          </li>
+                        ))}
+                      </ul>
+                      <a href="/contact#contact-form">
+                        <Button className="w-full bg-[#f7941D] hover:bg-[#d4740e] text-white rounded-full">
+                          Become a Sponsor
+                        </Button>
+                      </a>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </motion.div>
         </div>
       </section>
 

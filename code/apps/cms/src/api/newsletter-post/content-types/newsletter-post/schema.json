@@ -1,0 +1,66 @@
+{
+  "kind": "collectionType",
+  "collectionName": "newsletter_posts",
+  "info": {
+    "singularName": "newsletter-post",
+    "pluralName": "newsletter-posts",
+    "displayName": "Newsletter Post"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "excerpt": {
+      "type": "text"
+    },
+    "body": {
+      "type": "blocks",
+      "required": true
+    },
+    "coverImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "authorName": {
+      "type": "string"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "Community Update",
+        "Event Recap",
+        "Partner Spotlight",
+        "Announcement",
+        "Story"
+      ]
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "publishDate": {
+      "type": "datetime"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true
+    },
+    "displayOrder": {
+      "type": "integer",
+      "default": 0
+    }
+  }
+}
