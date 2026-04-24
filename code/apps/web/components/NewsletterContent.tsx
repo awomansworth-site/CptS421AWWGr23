@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Calendar, Tag, User, ArrowRight, Star } from "lucide-react";
+import { useState, useRef } from "react";
 
 export type NewsletterPost = {
   id: number;
@@ -158,13 +159,53 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.1 } },
 };
 
+type SignupState = "idle" | "submitting" | "success" | "error";
+
 export default function NewsletterContent({ posts }: { posts: NewsletterPost[] }) {
   const featured = posts.find((p) => p.featured) ?? null;
   const rest = posts.filter((p) => !p.featured || p !== featured);
 
+  const [email, setEmail] = useState("");
+  const [signupState, setSignupState] = useState<SignupState>("idle");
+  const [signupMsg, setSignupMsg] = useState("");
+  const emailRef = useRef<HTMLInputElement>(null);
+
+  async function handleSubscribe(e: React.FormEvent) {
+    e.preventDefault();
+    if (signupState === "submitting") return;
+    const trimmed = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setSignupState("error");
+      setSignupMsg("Please enter a valid email address.");
+      emailRef.current?.focus();
+      return;
+    }
+    setSignupState("submitting");
+    setSignupMsg("");
+    try {
+      const res = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: trimmed }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSignupState("success");
+        setSignupMsg(data.message || "You're subscribed!");
+        setEmail("");
+      } else {
+        setSignupState("error");
+        setSignupMsg(data.message || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setSignupState("error");
+      setSignupMsg("Something went wrong. Please try again later.");
+    }
+  }
+
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero */}
+      {/* Hero + Signup */}
       <section
         className="relative overflow-hidden py-20 text-white"
         style={{ background: "linear-gradient(135deg,#0a3680 0%,#0d4ea6 55%,#f79520 100%)" }}
@@ -180,9 +221,62 @@ export default function NewsletterContent({ posts }: { posts: NewsletterPost[] }
             <Tag className="h-4 w-4" /> AWW Newsletter
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold mb-4">Stay Connected</h1>
-          <p className="text-lg md:text-xl text-white/85 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-white/85 max-w-2xl mx-auto mb-8">
             Updates, event recaps, community stories, and partner news from A Woman's Worth.
           </p>
+
+          {/* Inline signup */}
+          {signupState === "success" ? (
+            <motion.div
+              className="mx-auto max-w-md rounded-2xl bg-white/15 backdrop-blur-sm px-6 py-4 text-white"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+            >
+              <p className="text-lg font-semibold">🎉 {signupMsg}</p>
+              <p className="text-sm text-white/75 mt-1">We'll keep you in the loop.</p>
+            </motion.div>
+          ) : (
+            <motion.form
+              onSubmit={handleSubscribe}
+              noValidate
+              className="mx-auto max-w-md"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  ref={emailRef}
+                  type="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (signupState === "error") setSignupState("idle");
+                  }}
+                  placeholder="Your email address"
+                  required
+                  disabled={signupState === "submitting"}
+                  className={`flex-1 rounded-xl px-4 py-3 text-sm text-gray-900 outline-none
+                    placeholder:text-gray-400 disabled:opacity-60 transition-all
+                    focus:ring-2 focus:ring-white/60
+                    ${signupState === "error" ? "bg-red-50 ring-2 ring-red-300" : "bg-white"}`}
+                />
+                <button
+                  type="submit"
+                  disabled={signupState === "submitting"}
+                  className="rounded-xl px-6 py-3 text-sm font-semibold bg-[#f7941D] text-white
+                    hover:bg-[#e8830e] active:scale-95 transition-all disabled:opacity-60
+                    whitespace-nowrap shadow-lg shadow-black/20"
+                >
+                  {signupState === "submitting" ? "Subscribing…" : "Subscribe"}
+                </button>
+              </div>
+              {signupState === "error" && signupMsg && (
+                <p className="mt-2 text-sm text-red-200" role="alert">{signupMsg}</p>
+              )}
+            </motion.form>
+          )}
         </motion.div>
       </section>
 

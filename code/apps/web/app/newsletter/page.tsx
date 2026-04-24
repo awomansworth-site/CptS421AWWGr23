@@ -1,5 +1,4 @@
 import NewsletterContent, { type NewsletterPost } from "@/components/NewsletterContent";
-import NewsletterSignup from "@/components/NewsletterSignup";
 
 export const revalidate = 30;
 
@@ -114,10 +113,5 @@ async function getNewsletterPosts(): Promise<NewsletterPost[]> {
 export default async function NewsletterPage() {
   const cms = await getNewsletterPosts();
   const posts = cms.length > 0 ? cms : PLACEHOLDER_POSTS;
-  return (
-    <>
-      <NewsletterSignup />
-      <NewsletterContent posts={posts} />
-    </>
-  );
+  return <NewsletterContent posts={posts} />;
 }
