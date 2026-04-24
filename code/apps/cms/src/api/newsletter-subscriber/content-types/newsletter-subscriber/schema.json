@@ -26,6 +26,13 @@
       "type": "boolean",
       "default": true
     },
+    "unsubscribedAt": {
+      "type": "datetime"
+    },
+    "unsubscribeToken": {
+      "type": "string",
+      "unique": true
+    },
     "source": {
       "type": "string",
       "default": "website"

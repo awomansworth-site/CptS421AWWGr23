@@ -61,6 +61,29 @@
     "displayOrder": {
       "type": "integer",
       "default": 0
+    },
+    "sendAsEmail": {
+      "type": "boolean",
+      "default": false
+    },
+    "emailSubject": {
+      "type": "string"
+    },
+    "emailPreviewText": {
+      "type": "text"
+    },
+    "sentAt": {
+      "type": "datetime"
+    },
+    "emailStatus": {
+      "type": "enumeration",
+      "enum": [
+        "Draft",
+        "Ready to Send",
+        "Sent",
+        "Failed"
+      ],
+      "default": "Draft"
     }
   }
 }

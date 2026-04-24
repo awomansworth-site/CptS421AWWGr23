@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 
 const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || "http://localhost:1337";
 
@@ -36,6 +37,7 @@ export async function POST(req: NextRequest) {
           subscribedAt: new Date().toISOString(),
           active: true,
           source: "website",
+          unsubscribeToken: randomUUID(),
         },
       }),
     });
