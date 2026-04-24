@@ -28,7 +28,7 @@ export interface SendResult {
 /** Build a clean, branded HTML email */
 function buildHtml(opts: SendNewsletterOptions): string {
   const { title, previewText, excerpt, articleUrl, unsubscribeUrl } = opts;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://awomansworth.org";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://awomansworth.co";
 
   return `<!DOCTYPE html>
 <html lang="en">

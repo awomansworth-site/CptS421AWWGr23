@@ -20,7 +20,7 @@ import { sendNewsletterEmail } from "@/lib/email/sendNewsletterEmail";
 
 const STRAPI = process.env.STRAPI_API_URL || process.env.NEXT_PUBLIC_CMS_URL || "http://localhost:1337";
 const TOKEN = process.env.STRAPI_API_TOKEN || "";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://awomansworth.org";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://awomansworth.co";
 
 function strapiHeaders() {
   return {
