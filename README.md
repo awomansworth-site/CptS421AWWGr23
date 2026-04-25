@@ -1,8 +1,7 @@
 # A Woman’s Worth Web Platform  
 **CptS421 Group 23 — Washington State University**
-LIVE LINK:  https://cpt-s421-aww-gr23-t1mk.vercel.app/
 ---
-
+##LIVE:  https://cpt-s421-aww-gr23-t1mk.vercel.app/
 ## Project Overview
 We’re building a modern, welcoming web platform for **A Woman’s Worth (AWW)** — an organization dedicated to empowering women by providing a safe space to share stories, connect with others, and discover community events.  
 
