@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "donation_links",
+  "info": {
+    "singularName": "donation-link",
+    "pluralName": "donation-links",
+    "displayName": "Donation link"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "donationUrl": {
+      "type": "string"
+    }
+  }
+}

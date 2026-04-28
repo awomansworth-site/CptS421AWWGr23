@@ -38,6 +38,29 @@
         "active": {
             "type": "boolean",
             "default": true
+        },
+        "tier": {
+            "type": "enumeration",
+            "enum": [
+                "Community Sponsor",
+                "Empowerment Sponsor",
+                "Legacy Sponsor",
+                "Partner"
+            ]
+        },
+        "sponsorType": {
+            "type": "enumeration",
+            "enum": [
+                "Sponsor",
+                "Partner",
+                "Grant Partner"
+            ]
+        },
+        "amountLabel": {
+            "type": "string"
+        },
+        "callout": {
+            "type": "string"
         }
     }
 }

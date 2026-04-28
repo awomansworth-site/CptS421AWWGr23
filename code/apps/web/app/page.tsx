@@ -28,7 +28,7 @@ function textExcerpt(rich: any, max = 160): string {
 
 async function getStories(): Promise<StoryCard[]> {
   const res = await fetchJSON<any>(
-    "/api/stories?filters[storyStatus][$eq]=approved&populate=cover&sort=publishedAt:desc&pagination[pageSize]=3"
+    "/api/stories?filters[storyStatus][$eq]=approved&populate=cover&sort=publishedAt:desc&pagination[pageSize]=12"
   );
   const rows: any[] = (res && (Array.isArray(res) ? res : res?.data)) || [];
   return rows.map((s: any) => {

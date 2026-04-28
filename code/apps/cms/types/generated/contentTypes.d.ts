@@ -463,6 +463,35 @@ export interface ApiContactContact extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiDonationLinkDonationLink
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'donation_links';
+  info: {
+    displayName: 'Donation link';
+    pluralName: 'donation-links';
+    singularName: 'donation-link';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    donationUrl: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::donation-link.donation-link'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   collectionName: 'events';
   info: {
@@ -480,6 +509,7 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    endDateTime: Schema.Attribute.DateTime;
     featured: Schema.Attribute.Boolean;
     image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -522,6 +552,98 @@ export interface ApiHeroSlideHeroSlide extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiNewsletterPostNewsletterPost
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'newsletter_posts';
+  info: {
+    displayName: 'Newsletter Post';
+    pluralName: 'newsletter-posts';
+    singularName: 'newsletter-post';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    active: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    authorName: Schema.Attribute.String;
+    body: Schema.Attribute.Blocks & Schema.Attribute.Required;
+    category: Schema.Attribute.Enumeration<
+      [
+        'Community Update',
+        'Event Recap',
+        'Partner Spotlight',
+        'Announcement',
+        'Story',
+      ]
+    >;
+    coverImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    displayOrder: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    emailPreviewText: Schema.Attribute.Text;
+    emailStatus: Schema.Attribute.Enumeration<
+      ['Draft', 'Ready to Send', 'Sent', 'Failed']
+    > &
+      Schema.Attribute.DefaultTo<'Draft'>;
+    emailSubject: Schema.Attribute.String;
+    excerpt: Schema.Attribute.Text;
+    featured: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::newsletter-post.newsletter-post'
+    > &
+      Schema.Attribute.Private;
+    publishDate: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    sendAsEmail: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    sentAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiNewsletterSubscriberNewsletterSubscriber
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'newsletter_subscribers';
+  info: {
+    displayName: 'Newsletter Subscriber';
+    pluralName: 'newsletter-subscribers';
+    singularName: 'newsletter-subscriber';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    active: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::newsletter-subscriber.newsletter-subscriber'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    source: Schema.Attribute.String & Schema.Attribute.DefaultTo<'website'>;
+    subscribedAt: Schema.Attribute.DateTime;
+    unsubscribedAt: Schema.Attribute.DateTime;
+    unsubscribeToken: Schema.Attribute.String & Schema.Attribute.Unique;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -635,7 +757,9 @@ export interface ApiSponsorSponsor extends Struct.CollectionTypeSchema {
   };
   attributes: {
     active: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    amountLabel: Schema.Attribute.String;
     blurb: Schema.Attribute.RichText;
+    callout: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -650,6 +774,12 @@ export interface ApiSponsorSponsor extends Struct.CollectionTypeSchema {
     logo: Schema.Attribute.Media<'images'>;
     name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    sponsorType: Schema.Attribute.Enumeration<
+      ['Sponsor', 'Partner', 'Grant Partner']
+    >;
+    tier: Schema.Attribute.Enumeration<
+      ['Community Sponsor', 'Empowerment Sponsor', 'Legacy Sponsor', 'Partner']
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1226,8 +1356,11 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::contact.contact': ApiContactContact;
+      'api::donation-link.donation-link': ApiDonationLinkDonationLink;
       'api::event.event': ApiEventEvent;
       'api::hero-slide.hero-slide': ApiHeroSlideHeroSlide;
+      'api::newsletter-post.newsletter-post': ApiNewsletterPostNewsletterPost;
+      'api::newsletter-subscriber.newsletter-subscriber': ApiNewsletterSubscriberNewsletterSubscriber;
       'api::order.order': ApiOrderOrder;
       'api::product.product': ApiProductProduct;
       'api::sponsor.sponsor': ApiSponsorSponsor;
