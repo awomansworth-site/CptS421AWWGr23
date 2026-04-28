@@ -9,6 +9,15 @@ const mediaUrl = (p?: string) =>
 
 type Sponsor = { id: number; name?: string; logoUrl?: string; url?: string };
 
+type Stat = { label: string; value: string };
+
+const DEFAULT_STATS: Stat[] = [
+  { label: "Women served", value: "1,200+" },
+  { label: "Coats donated", value: "450+" },
+  { label: "Events hosted", value: "85+" },
+  { label: "Years active", value: "5+" },
+];
+
 async function fetchSponsors(): Promise<Sponsor[]> {
   try {
     const url =
@@ -42,8 +51,36 @@ async function fetchSponsors(): Promise<Sponsor[]> {
   }
 }
 
+async function fetchStats(): Promise<Stat[]> {
+  try {
+    const res = await fetch(`${CMS_URL}/api/donation-links`, {
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) return DEFAULT_STATS;
+
+    const json = await res.json();
+    const first = json?.data?.[0];
+    const data = first?.attributes ?? first;
+
+    const stats: Stat[] = [
+      { label: data?.statOneLabel, value: data?.statOneValue },
+      { label: data?.statTwoLabel, value: data?.statTwoValue },
+      { label: data?.statThreeLabel, value: data?.statThreeValue },
+      { label: data?.statFourLabel, value: data?.statFourValue },
+    ].filter((s) => s.label && s.value);
+
+    return stats.length ? stats : DEFAULT_STATS;
+  } catch {
+    return DEFAULT_STATS;
+  }
+}
+
 export default async function SponsorStatsStrip() {
-  const sponsors = await fetchSponsors();
+  const [sponsors, stats] = await Promise.all([
+    fetchSponsors(),
+    fetchStats(),
+  ]);
 
   return (
     <section className="relative py-14 overflow-hidden">
@@ -66,25 +103,26 @@ export default async function SponsorStatsStrip() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { label: "Women served", value: "1,200+" },
-            { label: "Coats donated", value: "450+" },
-            { label: "Events hosted", value: "85+" },
-            { label: "Years active", value: "5+" },
-          ].map((s) => (
+          {stats.map((s) => (
             <div
               key={s.label}
               className="rounded-2xl border border-[var(--aww-border)] bg-white/80 p-6 text-center shadow-sm backdrop-blur"
             >
-              <div className="text-3xl font-extrabold text-[var(--aww-navy)]">{s.value}</div>
-              <div className="mt-1 text-sm text-neutral-600">{s.label}</div>
+              <div className="text-3xl font-extrabold text-[var(--aww-navy)]">
+                {s.value}
+              </div>
+              <div className="mt-1 text-sm text-neutral-600">
+                {s.label}
+              </div>
             </div>
           ))}
         </div>
 
         {/* Sponsors belt */}
         <div className="mt-10 rounded-2xl border border-[var(--aww-border)] bg-white/70 px-2 py-4 backdrop-blur">
-          <div className="text-center text-sm font-medium text-neutral-600">Supported by</div>
+          <div className="text-center text-sm font-medium text-neutral-600">
+            Supported by
+          </div>
           <SponsorsBeltClient sponsors={sponsors} />
         </div>
       </div>

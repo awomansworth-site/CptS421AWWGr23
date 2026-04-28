@@ -19,13 +19,21 @@ function pickUrl(img: any): string {
   return img?.url || img?.data?.attributes?.url || "";
 }
 
-async function getDonationUrl(): Promise<string | null> {
+type HomeSettings = {
+  donationUrl: string | null;
+  aboutDescription: string | null;
+};
+
+async function getHomeSettings(): Promise<HomeSettings> {
   const res = await fetchJSON<any>("/api/donation-links");
 
   const first = res?.data?.[0];
   const data = first?.attributes ?? first;
 
-  return data?.donationUrl ?? null;
+  return {
+    donationUrl: data?.donationUrl ?? null,
+    aboutDescription: data?.aboutDescription ?? null,
+  };
 }
 
 function textExcerpt(rich: any, max = 160): string {
@@ -67,19 +75,21 @@ async function getEvents(): Promise<EventCard[]> {
       startDateTime: a?.startDateTime,
       endDateTime: a?.endDateTime,
       location: a?.location,
+      featured: a?.featured ?? false,
     };
   });
 }
 
 export default async function HomePage() {
-  const [stories, events, donationUrl] = await Promise.all([getStories(), getEvents(), getDonationUrl()]);
+  const [stories, events, homeSettings] = await Promise.all([getStories(), getEvents(), getHomeSettings()]);
   return (
     <main className="min-h-screen bg-white">
-      <HeroCarousel donationUrl={donationUrl}/>
+      <HeroCarousel donationUrl={homeSettings.donationUrl}/>
       <HomePageContent
         stories={stories}
         events={events}
-        donationUrl={donationUrl}
+        donationUrl={homeSettings.donationUrl}
+        aboutDescription={homeSettings.aboutDescription}
         sponsorStrip={<SponsorStatsStrip />}
       />
     </main>

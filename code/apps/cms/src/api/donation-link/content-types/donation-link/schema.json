@@ -28,6 +28,33 @@
     },
     "footerDescription": {
       "type": "text"
+    },
+    "aboutDescription": {
+      "type": "text"
+    },
+    "statOneLabel": {
+      "type": "string"
+    },
+    "statOneValue": {
+      "type": "string"
+    },
+    "statTwoLabel": {
+      "type": "string"
+    },
+    "statTwoValue": {
+      "type": "string"
+    },
+    "statThreeLabel": {
+      "type": "string"
+    },
+    "statThreeValue": {
+      "type": "string"
+    },
+    "statFourLabel": {
+      "type": "string"
+    },
+    "statFourValue": {
+      "type": "string"
     }
   }
 }

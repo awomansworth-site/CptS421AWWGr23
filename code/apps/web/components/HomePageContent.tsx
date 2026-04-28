@@ -19,8 +19,9 @@ export type EventCard = {
   documentId?: string | null;
   title: string;
   startDateTime?: string;
-  endDatetime?: string;
+  endDateTime?: string;
   location?: string;
+  featured?: boolean | null;
 };
 
 const FALLBACK_DONATION_URL =
@@ -95,11 +96,13 @@ export default function HomePageContent({
   events: cmsEvents,
   sponsorStrip,
   donationUrl,
+  aboutDescription,
 }: {
   stories: StoryCard[];
   events: EventCard[];
   sponsorStrip?: React.ReactNode;
   donationUrl?: string | null;
+  aboutDescription?: string | null;
 }) {
   const events = cmsEvents.slice(0, 2);
   const finalDonationUrl = safeExternalUrl(donationUrl);
@@ -121,8 +124,7 @@ export default function HomePageContent({
           </motion.h2>
 
           <motion.p variants={fadeUp} className="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto mb-8">
-            We believe every woman has inherent worth and unlimited potential. Through mentorship, community support, and empowerment programs, we help women discover their strength,
-            pursue their dreams, and create positive change in their lives and communities.
+            {aboutDescription || "We believe every woman has inherent worth and unlimited potential. Through mentorship, community support, and empowerment programs, we help women discover their strength, pursue their dreams, and create positive change in their lives and communities."}
           </motion.p>
 
           <motion.div variants={fadeUp}>
@@ -179,9 +181,14 @@ export default function HomePageContent({
 
                         <div>
                           <h3 className="font-bold">{ev.title}</h3>
+                          {ev.featured && (
+                            <span className="mt-1 inline-block rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-[#f7941D]">
+                              Featured
+                            </span>
+                          )}
                           <div className="flex items-center text-sm text-gray-600">
                             <Calendar className="h-4 w-4 mr-2" />
-                            {fmtTimeRange(ev.startDateTime, ev.endDatetime)}
+                            {fmtTimeRange(ev.startDateTime, ev.endDateTime)}
                           </div>
                           {ev.location && (
                             <div className="flex items-center text-sm text-gray-600">

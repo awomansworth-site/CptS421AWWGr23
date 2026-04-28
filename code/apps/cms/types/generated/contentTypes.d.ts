@@ -506,6 +506,7 @@ export interface ApiDonationLinkDonationLink
     draftAndPublish: true;
   };
   attributes: {
+    aboutDescription: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -521,6 +522,14 @@ export interface ApiDonationLinkDonationLink
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    statFourLabel: Schema.Attribute.String;
+    statFourValue: Schema.Attribute.String;
+    statOneLabel: Schema.Attribute.String;
+    statOneValue: Schema.Attribute.String;
+    statThreeLabel: Schema.Attribute.String;
+    statThreeValue: Schema.Attribute.String;
+    statTwoLabel: Schema.Attribute.String;
+    statTwoValue: Schema.Attribute.String;
     twitterUrl: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
