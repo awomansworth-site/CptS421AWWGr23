@@ -1,0 +1,56 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_galleries",
+  "info": {
+    "singularName": "event-gallery",
+    "pluralName": "event-galleries",
+    "displayName": "event-gallery"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid"
+    },
+    "eventDate": {
+      "type": "date"
+    },
+    "location": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "coverImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "galleryImages": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "featured": {
+      "type": "boolean"
+    },
+    "displayOrder": {
+      "type": "integer"
+    }
+  }
+}

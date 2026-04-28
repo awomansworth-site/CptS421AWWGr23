@@ -537,6 +537,48 @@ export interface ApiDonationLinkDonationLink
   };
 }
 
+export interface ApiEventGalleryEventGallery
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'event_galleries';
+  info: {
+    displayName: 'event-gallery';
+    pluralName: 'event-galleries';
+    singularName: 'event-gallery';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    coverImage: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Blocks;
+    displayOrder: Schema.Attribute.Integer;
+    eventDate: Schema.Attribute.Date;
+    featured: Schema.Attribute.Boolean;
+    galleryImages: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::event-gallery.event-gallery'
+    > &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   collectionName: 'events';
   info: {
@@ -1509,6 +1551,7 @@ declare module '@strapi/strapi' {
       'api::accessibility-statement.accessibility-statement': ApiAccessibilityStatementAccessibilityStatement;
       'api::contact.contact': ApiContactContact;
       'api::donation-link.donation-link': ApiDonationLinkDonationLink;
+      'api::event-gallery.event-gallery': ApiEventGalleryEventGallery;
       'api::event.event': ApiEventEvent;
       'api::hero-slide.hero-slide': ApiHeroSlideHeroSlide;
       'api::newsletter-post.newsletter-post': ApiNewsletterPostNewsletterPost;
