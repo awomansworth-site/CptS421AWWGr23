@@ -738,6 +738,51 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiPartnerPartner extends Struct.CollectionTypeSchema {
+  collectionName: 'partners';
+  info: {
+    displayName: 'Partner';
+    pluralName: 'partners';
+    singularName: 'partner';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    active: Schema.Attribute.Boolean;
+    blurb: Schema.Attribute.Blocks;
+    callout: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    displayOrder: Schema.Attribute.Integer;
+    featured: Schema.Attribute.Boolean;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::partner.partner'
+    > &
+      Schema.Attribute.Private;
+    logo: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    name: Schema.Attribute.String;
+    partnerType: Schema.Attribute.Enumeration<
+      [
+        'Community Partner',
+        'Program Partner',
+        'Resource Partner',
+        'Grant Partner',
+        'Corporate Partner',
+        'Other',
+      ]
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    url: Schema.Attribute.String;
+  };
+}
+
 export interface ApiPrivacyPolicyPrivacyPolicy extends Struct.SingleTypeSchema {
   collectionName: 'privacy_policies';
   info: {
@@ -1469,6 +1514,7 @@ declare module '@strapi/strapi' {
       'api::newsletter-post.newsletter-post': ApiNewsletterPostNewsletterPost;
       'api::newsletter-subscriber.newsletter-subscriber': ApiNewsletterSubscriberNewsletterSubscriber;
       'api::order.order': ApiOrderOrder;
+      'api::partner.partner': ApiPartnerPartner;
       'api::privacy-policy.privacy-policy': ApiPrivacyPolicyPrivacyPolicy;
       'api::product.product': ApiProductProduct;
       'api::sponsor.sponsor': ApiSponsorSponsor;

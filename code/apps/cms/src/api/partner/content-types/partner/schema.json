@@ -1,0 +1,57 @@
+{
+  "kind": "collectionType",
+  "collectionName": "partners",
+  "info": {
+    "singularName": "partner",
+    "pluralName": "partners",
+    "displayName": "Partner"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "blurb": {
+      "type": "blocks"
+    },
+    "partnerType": {
+      "type": "enumeration",
+      "enum": [
+        "Community Partner",
+        "Program Partner",
+        "Resource Partner",
+        "Grant Partner",
+        "Corporate Partner",
+        "Other"
+      ]
+    },
+    "callout": {
+      "type": "string"
+    },
+    "featured": {
+      "type": "boolean"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "displayOrder": {
+      "type": "integer"
+    }
+  }
+}
