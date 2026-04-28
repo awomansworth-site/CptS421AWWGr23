@@ -75,7 +75,7 @@ export default async function HomePage() {
   const [stories, events, donationUrl] = await Promise.all([getStories(), getEvents(), getDonationUrl()]);
   return (
     <main className="min-h-screen bg-white">
-      <HeroCarousel />
+      <HeroCarousel donationUrl={donationUrl}/>
       <HomePageContent
         stories={stories}
         events={events}

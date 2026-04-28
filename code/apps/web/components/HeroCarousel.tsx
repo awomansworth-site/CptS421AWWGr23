@@ -13,14 +13,37 @@ const LOCAL_SLIDES: Slide[] = [
   { src: "/hero/slide-4.jpeg", alt: "A Woman's Worth celebration", objectPosition: "center 12%" },
 ];
 
+const FALLBACK_DONATION_URL =
+  "https://www.paypal.com/donate/?hosted_button_id=4HQXUB47ZQSUG";
+
 const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || "http://localhost:1337";
 
-export default function HeroCarousel() {
+function safeExternalUrl(url?: string | null) {
+  if (!url) return FALLBACK_DONATION_URL;
+
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === "https:" || parsed.protocol === "http:") {
+      return parsed.toString();
+    }
+  } catch {
+    return FALLBACK_DONATION_URL;
+  }
+
+  return FALLBACK_DONATION_URL;
+}
+
+export default function HeroCarousel({
+  donationUrl,
+}: {
+  donationUrl?:string | null;
+}) {
   const [slides, setSlides] = useState<Slide[]>(LOCAL_SLIDES);
   const [current, setCurrent] = useState(0);
   // Refs to Ken Burns wrapper divs — animation restarted via direct DOM,
   // nothing ever remounts so there is zero decode jitter.
   const kbRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const finalDonationUrl = safeExternalUrl(donationUrl);
 
   const restartKenBurns = (idx: number) => {
     const el = kbRefs.current[idx];
@@ -63,7 +86,11 @@ export default function HeroCarousel() {
               (Array.isArray(a?.image?.data) && a.image.data[0]?.attributes?.url) ||
               "";
             if (!raw) return null;
-            return { src: raw.startsWith("http") ? raw : `${CMS_URL}${raw}`, alt: a?.alt || "" };
+            return { 
+              src: raw.startsWith("http") ? raw : `${CMS_URL}${raw}`,
+              alt: a?.alt || "A Woman's Worth slide",
+              objectPosition: a?.objectPosition || "center center",
+            };
           })
           .filter(Boolean) as Slide[];
         if (!cancelled && mapped.length) { setSlides(mapped); setCurrent(0); }
@@ -114,7 +141,7 @@ export default function HeroCarousel() {
         </h1>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
           <a
-            href="https://www.paypal.com/donate/?hosted_button_id=4HQXUB47ZQSUG"
+            href={finalDonationUrl}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center justify-center gap-2 bg-[#004080] hover:bg-[#003066] text-white px-8 py-3 font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
