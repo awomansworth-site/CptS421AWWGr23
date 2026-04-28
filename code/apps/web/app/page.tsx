@@ -19,6 +19,15 @@ function pickUrl(img: any): string {
   return img?.url || img?.data?.attributes?.url || "";
 }
 
+async function getDonationUrl(): Promise<string | null> {
+  const res = await fetchJSON<any>("/api/donation-links");
+
+  const first = res?.data?.[0];
+  const data = first?.attributes ?? first;
+
+  return data?.donationUrl ?? null;
+}
+
 function textExcerpt(rich: any, max = 160): string {
   if (typeof rich === "string") return rich.slice(0, max);
   const para = Array.isArray(rich) ? rich.find((b: any) => b?.type === "paragraph") : null;
@@ -56,19 +65,21 @@ async function getEvents(): Promise<EventCard[]> {
       documentId: a?.documentId ?? null,
       title: a?.title ?? "Event",
       startDateTime: a?.startDateTime,
+      endDateTime: a?.endDateTime,
       location: a?.location,
     };
   });
 }
 
 export default async function HomePage() {
-  const [stories, events] = await Promise.all([getStories(), getEvents()]);
+  const [stories, events, donationUrl] = await Promise.all([getStories(), getEvents(), getDonationUrl()]);
   return (
     <main className="min-h-screen bg-white">
       <HeroCarousel />
       <HomePageContent
         stories={stories}
         events={events}
+        donationUrl={donationUrl}
         sponsorStrip={<SponsorStatsStrip />}
       />
     </main>

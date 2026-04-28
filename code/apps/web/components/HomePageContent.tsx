@@ -4,6 +4,7 @@ import { Calendar, MapPin, ArrowRight, Heart } from "lucide-react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import StoriesCarousel from "./StoriesCarousel";
+
 // ── Types ─────────────────────────────────
 export type StoryCard = {
   id: number;
@@ -18,8 +19,12 @@ export type EventCard = {
   documentId?: string | null;
   title: string;
   startDateTime?: string;
+  endDatetime?: string;
   location?: string;
 };
+
+const FALLBACK_DONATION_URL =
+  "https://www.paypal.com/donate/?hosted_button_id=4HQXUB47ZQSUG";
 
 // ── Animations (fixed types) ──────────────
 const fadeUp: Variants = {
@@ -35,6 +40,19 @@ const stagger: Variants = {
 const VP = { once: true, margin: "-50px" } as const;
 
 // ── Helpers ───────────────────────────────
+
+function safeExternalUrl(url?: string | null){
+  if(!url) return FALLBACK_DONATION_URL;
+  try{
+    const parsed = new URL(url);
+    if(parsed.protocol === "https:" || parsed.protocol === "http:") {
+      return parsed.toString();
+    }
+  } catch {
+    return FALLBACK_DONATION_URL;
+  }
+  return FALLBACK_DONATION_URL;
+}
 
 function eventHref(e: EventCard) {
   return e.documentId ? `/events/${encodeURIComponent(e.documentId)}` : "/events";
@@ -58,17 +76,33 @@ function fmtTime(iso?: string) {
   });
 }
 
+function fmtTimeRange(startIso?: string, endIso?: string) {
+  const start = fmtTime(startIso);
+
+  if (!endIso) return start;
+
+  const end = fmtTime(endIso);
+
+  if (start === "TBA") return end;
+  if (end === "TBA") return start;
+
+  return `${start} – ${end}`;
+}
+
 // ── Component ─────────────────────────────
 export default function HomePageContent({
   stories: cmsStories,
   events: cmsEvents,
   sponsorStrip,
+  donationUrl,
 }: {
   stories: StoryCard[];
   events: EventCard[];
   sponsorStrip?: React.ReactNode;
+  donationUrl?: string | null;
 }) {
   const events = cmsEvents.slice(0, 2);
+  const finalDonationUrl = safeExternalUrl(donationUrl);
 
   return (
     <div className="min-h-screen bg-white">
@@ -87,12 +121,13 @@ export default function HomePageContent({
           </motion.h2>
 
           <motion.p variants={fadeUp} className="text-lg md:text-xl text-gray-600 max-w-4xl mx-auto mb-8">
-            We believe every woman has inherent worth and unlimited potential.
+            We believe every woman has inherent worth and unlimited potential. Through mentorship, community support, and empowerment programs, we help women discover their strength,
+            pursue their dreams, and create positive change in their lives and communities.
           </motion.p>
 
           <motion.div variants={fadeUp}>
             <Link href="/stories" className="inline-flex items-center gap-2 bg-[#f7941D] text-white px-8 py-3 rounded-full">
-              Learn More <ArrowRight className="h-4 w-4" />
+              Learn More About Our Impact<ArrowRight className="h-4 w-4" />
             </Link>
           </motion.div>
         </motion.section>
@@ -114,7 +149,7 @@ export default function HomePageContent({
           )}  
         </motion.section>
 
-        {/* ── EVENTS (STYLE FIXED) ───────────────── */}
+        {/* ── EVENTS ───────────────── */}
         <motion.section
           variants={stagger}
           initial="hidden"
@@ -129,7 +164,7 @@ export default function HomePageContent({
           {events.length === 0 ? (
             <p className="text-center text-gray-500">No upcoming events available yet.</p>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className={`grid grid-cols-1 gap-6 max-w-4xl mx-auto ${events.length === 1 ? "lg:grid-cols-1 lg:max-w-xl" : "lg:grid-cols-2"}`}>
               {events.map((ev) => {
                 const { month, day } = fmtMonthDay(ev.startDateTime);
 
@@ -146,7 +181,7 @@ export default function HomePageContent({
                           <h3 className="font-bold">{ev.title}</h3>
                           <div className="flex items-center text-sm text-gray-600">
                             <Calendar className="h-4 w-4 mr-2" />
-                            {fmtTime(ev.startDateTime)}
+                            {fmtTimeRange(ev.startDateTime, ev.endDatetime)}
                           </div>
                           {ev.location && (
                             <div className="flex items-center text-sm text-gray-600">
@@ -184,7 +219,9 @@ export default function HomePageContent({
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.a
-                href="https://www.paypal.com/donate/?hosted_button_id=4HQXUB47ZQSUG"
+                href={finalDonationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#f7941D] to-[#F79520] hover:from-[#e8830a] hover:to-[#e8830a] text-white px-8 py-3 font-bold rounded-full shadow-xl transition-all duration-300"
