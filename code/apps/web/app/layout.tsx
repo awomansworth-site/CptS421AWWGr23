@@ -24,33 +24,106 @@ export const metadata: Metadata = {
   description: "Empowering women through community, support, and transformative programs.",
 };
 
-async function getDonationUrl(): Promise<string | null> {
+type SiteSettings = {
+  donationUrl: string | null;
+  facebookUrl: string | null;
+  instagramUrl: string | null;
+  linkedinUrl: string | null;
+  twitterUrl: string | null;
+  footerDescription: string | null;
+};
+
+const defaultSiteSettings: SiteSettings = {
+  donationUrl: null,
+  facebookUrl: null,
+  instagramUrl: null,
+  linkedinUrl: null,
+  twitterUrl: null,
+  footerDescription: null,
+};
+
+async function getSiteSettings(): Promise<SiteSettings> {
   try {
     const res = await fetch(`${CMS_URL}/api/donation-links`, {
       next: { revalidate: 60 },
     });
 
-    if (!res.ok) return null;
+    if (!res.ok){
+      return defaultSiteSettings;
+    }
 
     const json = await res.json();
     const first = json?.data?.[0];
     const data = first?.attributes ?? first;
 
-    return data?.donationUrl ?? null;
-  } catch {
-    return null;
+    return{
+      donationUrl: data?.donationUrl ?? null,
+      facebookUrl: data?.facebookUrl ?? null,
+      instagramUrl: data?.instagramUrl ?? null,
+      linkedinUrl: data?.linkedinUrl ?? null,
+      twitterUrl: data?.twitterUrl ?? null,
+      footerDescription: data?.footerDescription ?? null,
+    }
+}catch {
+    return defaultSiteSettings;
   }
 }
 
+async function getContact(): Promise<{
+  email: string | null;
+  phone: string | null;
+  address: string | null;
+}> {
+  try {
+    const res = await fetch(`${CMS_URL}/api/contact`, {
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) {
+      return { email: null, phone: null, address: null };
+    }
+
+    const json = await res.json();
+    const data = json?.data?.attributes ?? json?.data;
+
+    return {
+      email: data?.email ?? null,
+      phone: data?.phone ?? null,
+      address: extractAddress(data?.address),
+    };
+  } catch {
+    return { email: null, phone: null, address: null };
+  }
+}
+
+function extractAddress(rich: any): string | null {
+  if (!rich) return null;
+
+  if (typeof rich === "string") return rich;
+
+  const paragraph = rich.find((b: any) => b.type === "paragraph");
+  return paragraph?.children?.map((c: any) => c.text).join(" ") ?? null;
+}
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const donationUrl = await getDonationUrl();
+  const [siteSettings, contact] = await Promise.all([getSiteSettings(), getContact(),]);
   return (
     <html lang="en">
       <body>
         <CartProvider>
-          <Navigation donationUrl={donationUrl} />
+          <Navigation donationUrl={siteSettings.donationUrl} />
           {children}
-          <SiteFooter />
+          <SiteFooter 
+            donationUrl={siteSettings.donationUrl}
+            facebookUrl={siteSettings.facebookUrl}
+            instagramUrl={siteSettings.instagramUrl}
+            linkedinUrl={siteSettings.linkedinUrl}
+            twitterUrl={siteSettings.twitterUrl}
+            footerDescription={siteSettings.footerDescription}
+            email={contact.email}
+            phone={contact.phone}
+            address={contact.address}
+          />
         </CartProvider>
       </body>
     </html>

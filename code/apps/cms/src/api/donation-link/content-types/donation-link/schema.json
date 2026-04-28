@@ -4,7 +4,7 @@
   "info": {
     "singularName": "donation-link",
     "pluralName": "donation-links",
-    "displayName": "Donation link"
+    "displayName": "Site Settings"
   },
   "options": {
     "draftAndPublish": true
@@ -13,6 +13,21 @@
   "attributes": {
     "donationUrl": {
       "type": "string"
+    },
+    "facebookUrl": {
+      "type": "string"
+    },
+    "instagramUrl": {
+      "type": "string"
+    },
+    "linkedinUrl": {
+      "type": "string"
+    },
+    "twitterUrl": {
+      "type": "string"
+    },
+    "footerDescription": {
+      "type": "text"
     }
   }
 }
