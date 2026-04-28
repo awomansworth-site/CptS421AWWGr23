@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   description: "Empowering women through community, support, and transformative programs.",
   icons: {
     icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
   },
 };
 
